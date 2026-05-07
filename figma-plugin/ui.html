@@ -1,5 +1,1381 @@
 <!DOCTYPE html>
+<html lang="ru"><!DOCTYPE html>
 <html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>R<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>RockUP Token Audit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ─────────────────────────────────────────────────────
+       RockUP Ref / Sys tokens — light mode resolved values
+       ───────────────────────────────────────────────────── */
+    :root {
+      /* Surfaces */
+      --bg-page:       #fafafe;   /* rp/ref/color/gray/10      */
+      --bg-primary:    #ffffff;   /* rp/sys/bg/surface/primary */
+      --bg-secondary:  #f5f5fb;   /* rp/sys/bg/surface/secondary */
+      --bg-input:      #ececf6;   /* rp/sys/bg/fill/input/default */
+      --bg-input-on:   #ffffff;   /* rp/sys/bg/fill/input/active  */
+      --bg-disabled:   #f5f5fb;   /* rp/sys/bg/fill/disabled      */
+
+      /* Brand */
+      --brand:         #7d5ae7;   /* rp/sys/bg/fill/brand/default */
+      --brand-hover:   #502eb8;   /* rp/sys/bg/fill/brand/hover   */
+      --brand-active:  #603bce;   /* rp/sys/bg/fill/brand/active  */
+      --brand-subtle:  #f1f1f9;   /* rp/sys/bg/fill/brand/subtlest-default */
+
+      /* Foreground */
+      --fg-1:          #010119;   /* rp/ref/color/gray/190       */
+      --fg-2:          #3c3c57;   /* rp/ref/color/gray/160       */
+      --fg-3:          #757593;   /* rp/sys/color/fg/tertiary    */
+      --fg-dis:        #acacc8;   /* rp/sys/color/fg/disabled    */
+      --fg-brand:      #603bce;   /* rp/sys/color/fg/brand/default */
+
+      /* Borders */
+      --border-1:      #ececf6;   /* rp/sys/color/border/primary  */
+      --border-2:      #e1e1ef;   /* rp/sys/color/border/secondary */
+      --border-3:      #acacc8;   /* rp/sys/color/border/neutral/default */
+      --border-input:  #acacc8;   /* rp/sys/color/border/input/default */
+      --border-focus:  #7d5ae7;   /* rp/sys/color/border/input/hover */
+
+      /* Status — success */
+      --ok-bg:         #ebfaf0;   /* bg/surface/success/subtlest */
+      --ok-border:     #b5edc8;   /* border/success/subtlest     */
+      --ok-fg:         #29994e;   /* fg/success/bolder           */
+
+      /* Status — error */
+      --err-bg:        #fff5f6;   /* bg/surface/error/subtlest   */
+      --err-border:    #ffd1d5;   /* border/error/subtler        */
+      --err-fg:        #ed0c1f;   /* fg/error/default            */
+
+      /* Status — warning */
+      --warn-bg:       #fffcf0;   /* bg/surface/warning/subtlest */
+      --warn-border:   #ffdb4c;   /* border/warning/subtler      */
+      --warn-fg:       #d66700;   /* fg/warning/bolder           */
+
+      /* Focus ring */
+      --focus-ring:    #8f71ea;   /* rp/sys/color/border/focus   */
+
+      /* Misc */
+      --radius-sm:  4px;
+      --radius-md:  6px;
+      --radius-lg:  8px;
+    }
+
+    /* ── Brand ── */
+    .brand-mark {
+      flex-shrink: 0;
+      display: block;
+    }
+    .brand-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--fg-1);
+      line-height: 1.15;
+      letter-spacing: -0.2px;
+    }
+    .brand-name-up {
+      background: linear-gradient(160deg,
+        #FF7700 0%,
+        #E61BA2 39.5%,
+        #C431C4 56.2%,
+        #9235D4 72.3%,
+        #7857DB 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg-page);
+      color: var(--fg-1);
+      font-size: 12px;
+      line-height: 1.5;
+      height: 380px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       HEADER
+       ───────────────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      height: 48px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-1);
+      flex-shrink: 0;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* The ● icon — brand fill */
+    .brand-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .brand-icon svg { width: 10px; height: 10px; }
+
+    .brand-label {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .brand-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--fg-1);
+      line-height: 1.2;
+      letter-spacing: -0.1px;
+    }
+    .brand-tag {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--fg-3);
+      line-height: 1.2;
+    }
+
+    /* Status chip */
+    .chip {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--fg-3);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-2);
+      border-radius: 4px;
+      padding: 2px 8px;
+      line-height: 18px;
+      transition: color .15s, background .15s, border-color .15s;
+      white-space: nowrap;
+    }
+    .chip.running {
+      color: var(--brand);
+      background: var(--brand-subtle);
+      border-color: #d1caf2;
+    }
+    .chip.done {
+      color: var(--ok-fg);
+      background: var(--ok-bg);
+      border-color: var(--ok-border);
+    }
+    .chip.error {
+      color: var(--err-fg);
+      background: var(--err-bg);
+      border-color: var(--err-border);
+    }
+
+    /* ─────────────────────────────────────────────────────
+       BODY / FORM
+       ───────────────────────────────────────────────────── */
+    .body {
+      padding: 14px 16px 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    /* Field */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--fg-2);
+      letter-spacing: 0.3px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      height: 32px;
+      padding: 0 10px;
+      background: var(--bg-input);
+      border: 1.5px solid transparent;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 11px;
+      color: var(--fg-1);
+      outline: none;
+      transition: background .12s, border-color .12s, box-shadow .12s;
+      /* Monospace for URL/ID inputs */
+      font-family: 'SF Mono', 'Menlo', 'Cascadia Code', monospace;
+    }
+    input[type="text"]::placeholder {
+      color: var(--fg-dis);
+      font-family: inherit;
+    }
+    input[type="text"]:hover:not(:focus) {
+      border-color: var(--border-3);
+    }
+    input[type="text"]:focus {
+      background: var(--bg-input-on);
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(125, 90, 231, 0.16);
+    }
+
+    /* Hint text */
+    .hint {
+      font-size: 10px;
+      color: var(--fg-3);
+      line-height: 1.45;
+    }
+
+    /* Accordion */
+    .acc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 0;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--fg-3);
+      transition: color .12s;
+    }
+    .acc-btn:hover { color: var(--fg-1); }
+
+    .acc-arrow {
+      width: 14px;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--fg-3);
+      transition: transform .15s;
+    }
+    .acc-btn.open .acc-arrow { transform: rotate(90deg); }
+
+    .acc-content { display: none; margin-top: 8px; }
+    .acc-content.open { display: block; }
+
+    /* ─────────────────────────────────────────────────────
+       DIVIDER
+       ───────────────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-1);
+      flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       FOOTER
+       ───────────────────────────────────────────────────── */
+    .footer {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    /* Primary button */
+    .btn-primary {
+      width: 100%;
+      height: 34px;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background .12s, opacity .12s;
+      letter-spacing: -0.1px;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--brand-hover);
+    }
+    .btn-primary:active:not(:disabled) {
+      background: var(--brand-active);
+    }
+    .btn-primary:disabled {
+      background: var(--bg-secondary);
+      color: var(--fg-dis);
+      cursor: not-allowed;
+    }
+
+    /* Spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .65s linear infinite;
+      flex-shrink: 0;
+    }
+
+    /* Progress */
+    .progress { display: none; }
+    .progress.on { display: flex; flex-direction: column; gap: 5px; }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--border-2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 2px;
+      width: 0%;
+      transition: width .3s ease;
+    }
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .progress-label {
+      font-size: 10px;
+      color: var(--fg-3);
+    }
+    .progress-pct {
+      font-size: 10px;
+      color: var(--fg-3);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Result */
+    .result { display: none; }
+
+    .result.ok {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      padding: 9px 11px;
+      background: var(--ok-bg);
+      border: 1px solid var(--ok-border);
+      border-radius: var(--radius-md);
+      font-size: 11px;
+      color: var(--ok-fg);
+    }
+    .result.err {
+      display: block;
+      padding: 9px 11px;
+      background: var(--err-bg);
+      border: 1px solid var(--err-border);
+      border-radius: var(--radius-md);
+      font-size: 11px;
+      color: var(--err-fg);
+    }
+    .result.warn {
+      display: block;
+      padding: 9px 11px;
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      border-radius: var(--radius-md);
+      font-size: 11px;
+      color: var(--warn-fg);
+    }
+
+    /* URL copy input inside result */
+    .url-copy {
+      width: 100%;
+      margin-top: 6px;
+      padding: 4px 8px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid var(--ok-border);
+      border-radius: var(--radius-sm);
+      font-size: 10px;
+      font-family: 'SF Mono', 'Menlo', monospace;
+      color: var(--ok-fg);
+      cursor: text;
+      outline: none;
+    }
+    .url-copy:focus { border-color: var(--ok-fg); }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="header">
+  <div class="brand-group">
+    <!-- RockUP brand mark — mountain shape from official logo -->
+    <svg class="brand-mark" width="24" height="22" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="markGrad" x1="0" y1="0" x2="14" y2="26" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FF7700"/>
+          <stop offset="0.395" stop-color="#E61BA2"/>
+          <stop offset="0.562" stop-color="#C431C4"/>
+          <stop offset="0.723" stop-color="#9235D4"/>
+          <stop offset="1" stop-color="#7857DB"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#markGrad)" d="M19.383 26H7.09943C7.09943 25.9753 7.1064 25.9506 7.10989 25.9294C7.70645 22.504 10.9335 20.2158 14.321 20.8196C16.9933 21.2963 18.9679 23.4328 19.383 26ZM27.1453 20.2122C26.7545 19.9756 26.3533 19.739 25.9522 19.513C26.1929 21.5223 26.3185 23.6905 26.2626 26H23.224C23.3043 22.9702 23.0496 20.2016 22.6205 17.7438C22.3239 17.6097 22.0274 17.479 21.7274 17.3589C18.4969 16.0135 15.0571 15.0954 11.5579 14.88C10.2288 14.7917 8.88562 14.7564 7.55644 14.8376C5.8156 17.8533 4.18639 21.5682 3.11538 26H0C0.914029 21.9355 2.27112 18.4183 3.7852 15.4238C2.88861 15.6427 2.00249 15.9111 1.12684 16.236C1.93621 14.661 3.41889 13.7252 5.03763 13.1214C6.50635 10.6001 8.04485 8.53425 9.42636 6.91692C13.2744 2.4004 16.7037 0.302815 16.8467 0.218064C17.4921 -0.173909 18.3259 -0.0255949 18.8039 0.567662C18.9085 0.698319 21.4239 3.85882 23.5171 9.4312C24.2392 11.3522 24.9579 13.7182 25.4812 16.4549C26.3813 17.2106 27.1662 18.1076 27.6302 19.2093C27.8325 19.6896 27.9791 20.1981 28 20.7278C27.693 20.5512 27.4209 20.3747 27.1453 20.2122ZM21.8495 14.202C21.4971 12.8848 21.1099 11.6912 20.7227 10.6424C19.5051 7.36186 18.1131 4.96765 17.2584 3.65754C16.013 4.59333 13.8953 6.35897 11.6417 9.02157C10.8811 9.91851 10.0683 10.9673 9.24844 12.1609C12.6324 11.8113 16.0758 12.3163 19.3342 13.2556C20.1924 13.5134 21.0331 13.8277 21.8495 14.1984V14.202Z"/>
+    </svg>
+    <div class="brand-label">
+      <span class="brand-name">Rock<span class="brand-name-up">UP</span></span>
+      <span class="brand-tag">Token Audit</span>
+    </div>
+  </div>
+  <div class="chip" id="chip">Готов</div>
+</header>
+
+<!-- ── Body ── -->
+<div class="body">
+
+  <div class="field">
+    <label class="field-label" for="scriptUrl">Apps Script URL</label>
+    <input type="text" id="scriptUrl"
+           placeholder="https://script.google.com/macros/s/…/exec" />
+  </div>
+
+  <div>
+    <button class="acc-btn" id="accBtn" onclick="toggleAcc()">
+      <span class="acc-arrow">
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+          <path d="M2.5 1.5L5.5 4L2.5 6.5" stroke="currentColor" stroke-width="1.3"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      Spreadsheet ID
+    </button>
+    <div class="acc-content" id="accContent">
+      <div class="field">
+        <label class="field-label" for="spreadsheetId">ID таблицы</label>
+        <input type="text" id="spreadsheetId"
+               placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms" />
+        <span class="hint">Если пусто — Apps Script создаст новую таблицу.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<hr class="divider" />
+
+<!-- ── Footer ── -->
+<footer class="footer">
+
+  <button class="btn-primary" id="runBtn" onclick="startAudit()">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+      <path d="M3 1.5L9.5 5.5L3 9.5V1.5Z" fill="white"/>
+    </svg>
+    Запустить аудит
+  </button>
+
+  <div class="progress" id="progress">
+    <div class="progress-bar">
+      <div class="progress-fill" id="barFill"></div>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label" id="statusTxt">Инициализация…</span>
+      <span class="progress-pct" id="statusPct">0%</span>
+    </div>
+  </div>
+
+  <div class="result" id="resultBox"></div>
+
+</footer>
+
+<script>
+  var running = false;
+
+  /* ── Init ── */
+  document.addEventListener('DOMContentLoaded', function () {
+    parent.postMessage({ pluginMessage: { type: 'ui-ready' } }, '*');
+  });
+
+  /* ── Messages from code.js ── */
+  window.onmessage = function (event) {
+    var msg = event.data && event.data.pluginMessage;
+    if (!msg) return;
+
+    if (msg.type === 'stored-config') {
+      if (msg.scriptUrl)     document.getElementById('scriptUrl').value = msg.scriptUrl;
+      if (msg.spreadsheetId) {
+        document.getElementById('spreadsheetId').value = msg.spreadsheetId;
+        openAcc();
+      }
+    }
+
+    if (msg.type === 'status') setStatus(msg.text, msg.pct);
+
+    if (msg.type === 'audit-complete') {
+      setStatus('Данные обновлены', 100);
+      setChip('done', 'Готово');
+      showOk(msg.sheetUrl || null);
+      if (msg.sheetId) {
+        document.getElementById('spreadsheetId').value = msg.sheetId;
+        openAcc();
+        parent.postMessage({ pluginMessage: { type: 'save-config', config: {
+          scriptUrl:     document.getElementById('scriptUrl').value.trim(),
+          spreadsheetId: msg.sheetId
+        }}}, '*');
+      }
+      resetBtn();
+    }
+
+    if (msg.type === 'data-ready') sendToSheets(msg.data, msg.scriptUrl, msg.spreadsheetId);
+
+    if (msg.type === 'error') {
+      showErr(msg.text);
+      setChip('error', 'Ошибка');
+      resetBtn();
+    }
+  };
+
+  /* ── UI helpers ── */
+  function setChip(cls, text) {
+    var el = document.getElementById('chip');
+    el.className = 'chip' + (cls ? ' ' + cls : '');
+    el.textContent = text;
+  }
+
+  function setStatus(text, pct) {
+    document.getElementById('progress').classList.add('on');
+    document.getElementById('statusTxt').textContent = text;
+    if (pct != null) {
+      document.getElementById('barFill').style.width = pct + '%';
+      document.getElementById('statusPct').textContent = pct + '%';
+    }
+  }
+
+  function showOk(url) {
+    var b = document.getElementById('resultBox');
+    b.className = 'result ok';
+    if (url) {
+      b.innerHTML =
+        '<span>✓ Таблица обновлена</span>' +
+        '<input class="url-copy" type="text" readonly value="' + url +
+        '" onclick="this.select()" />';
+      parent.postMessage({ pluginMessage: { type: 'open-url', url: url } }, '*');
+    } else {
+      b.innerHTML = '<span>✓ Данные отправлены. Найди таблицу в Google Drive.</span>';
+    }
+  }
+
+  function showErr(msg) {
+    var b = document.getElementById('resultBox');
+    b.className = 'result err';
+    b.textContent = '✗ ' + msg;
+  }
+
+  function resetBtn() {
+    running = false;
+    var btn = document.getElementById('runBtn');
+    btn.disabled = false;
+    btn.innerHTML =
+      '<svg width="11" height="11" viewBox="0 0 11 11" fill="none">' +
+      '<path d="M3 1.5L9.5 5.5L3 9.5V1.5Z" fill="white"/></svg>' +
+      ' Запустить аудит';
+    setChip('', 'Готов');
+  }
+
+  /* ── Accordion ── */
+  function toggleAcc() {
+    var content = document.getElementById('accContent');
+    if (content.classList.contains('open')) {
+      content.classList.remove('open');
+      document.getElementById('accBtn').classList.remove('open');
+    } else {
+      openAcc();
+    }
+  }
+
+  function openAcc() {
+    document.getElementById('accContent').classList.add('open');
+    document.getElementById('accBtn').classList.add('open');
+  }
+
+  /* ── Start audit ── */
+  function startAudit() {
+    if (running) return;
+    var url = document.getElementById('scriptUrl').value.trim();
+    var sid = document.getElementById('spreadsheetId').value.trim() || null;
+
+    if (!url || url.indexOf('https://script.google.com') !== 0) {
+      showErr('Введи корректный URL Apps Script');
+      return;
+    }
+
+    running = true;
+    document.getElementById('resultBox').className = 'result';
+    document.getElementById('progress').classList.remove('on');
+    document.getElementById('barFill').style.width = '0%';
+    document.getElementById('statusPct').textContent = '0%';
+
+    var btn = document.getElementById('runBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Работает…';
+
+    setChip('running', 'Работает');
+    setStatus('Читаем переменные…', 3);
+
+    parent.postMessage({ pluginMessage: {
+      type: 'save-config', config: { scriptUrl: url, spreadsheetId: sid }
+    }}, '*');
+    parent.postMessage({ pluginMessage: {
+      type: 'run-audit', scriptUrl: url, spreadsheetId: sid
+    }}, '*');
+  }
+
+  /* ── Fallback: UI fetch ── */
+  async function sendToSheets(data, scriptUrl, spreadsheetId) {
+    setStatus('Отправляю в Sheets…', 92);
+    try {
+      var response = await fetch(scriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ data: data, spreadsheetId: spreadsheetId || null }),
+        redirect: 'follow'
+      });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      var result = await response.json();
+      setStatus('Готово', 100);
+      setChip('done', 'Готово');
+      showOk(result.url || null);
+    } catch (e) {
+      setStatus('CORS — скачиваю JSON…', 95);
+      downloadJson(data);
+      var b = document.getElementById('resultBox');
+      b.className = 'result warn';
+      b.innerHTML =
+        '⚠ Прямая отправка заблокирована (CORS).<br><br>' +
+        '<strong>JSON скачан.</strong> Загрузи в Google Drive или используй Figma Desktop.';
+    }
+    resetBtn();
+  }
+
+  function downloadJson(data) {
+    var date = new Date().toISOString().slice(0, 10);
+    var json = JSON.stringify(data, null, 2);
+    var blob = new Blob([json], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'rockup-audit-' + date + '.json';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
+ockUP Token Audit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ─────────────────────────────────────────────────────
+       RockUP Ref / Sys tokens — light mode resolved values
+       ───────────────────────────────────────────────────── */
+    :root {
+      /* Surfaces */
+      --bg-page:       #fafafe;   /* rp/ref/color/gray/10      */
+      --bg-primary:    #ffffff;   /* rp/sys/bg/surface/primary */
+      --bg-secondary:  #f5f5fb;   /* rp/sys/bg/surface/secondary */
+      --bg-input:      #ececf6;   /* rp/sys/bg/fill/input/default */
+      --bg-input-on:   #ffffff;   /* rp/sys/bg/fill/input/active  */
+      --bg-disabled:   #f5f5fb;   /* rp/sys/bg/fill/disabled      */
+
+      /* Brand */
+      --brand:         #7d5ae7;   /* rp/sys/bg/fill/brand/default */
+      --brand-hover:   #502eb8;   /* rp/sys/bg/fill/brand/hover   */
+      --brand-active:  #603bce;   /* rp/sys/bg/fill/brand/active  */
+      --brand-subtle:  #f1f1f9;   /* rp/sys/bg/fill/brand/subtlest-default */
+
+      /* Foreground */
+      --fg-1:          #010119;   /* rp/ref/color/gray/190       */
+      --fg-2:          #3c3c57;   /* rp/ref/color/gray/160       */
+      --fg-3:          #757593;   /* rp/sys/color/fg/tertiary    */
+      --fg-dis:        #acacc8;   /* rp/sys/color/fg/disabled    */
+      --fg-brand:      #603bce;   /* rp/sys/color/fg/brand/default */
+
+      /* Borders */
+      --border-1:      #ececf6;   /* rp/sys/color/border/primary  */
+      --border-2:      #e1e1ef;   /* rp/sys/color/border/secondary */
+      --border-3:      #acacc8;   /* rp/sys/color/border/neutral/default */
+      --border-input:  #acacc8;   /* rp/sys/color/border/input/default */
+      --border-focus:  #7d5ae7;   /* rp/sys/color/border/input/hover */
+
+      /* Status — success */
+      --ok-bg:         #ebfaf0;   /* bg/surface/success/subtlest */
+      --ok-border:     #b5edc8;   /* border/success/subtlest     */
+      --ok-fg:         #29994e;   /* fg/success/bolder           */
+
+      /* Status — error */
+      --err-bg:        #fff5f6;   /* bg/surface/error/subtlest   */
+      --err-border:    #ffd1d5;   /* border/error/subtler        */
+      --err-fg:        #ed0c1f;   /* fg/error/default            */
+
+      /* Status — warning */
+      --warn-bg:       #fffcf0;   /* bg/surface/warning/subtlest */
+      --warn-border:   #ffdb4c;   /* border/warning/subtler      */
+      --warn-fg:       #d66700;   /* fg/warning/bolder           */
+
+      /* Focus ring */
+      --focus-ring:    #8f71ea;   /* rp/sys/color/border/focus   */
+
+      /* Misc */
+      --radius-sm:  4px;
+      --radius-md:  6px;
+      --radius-lg:  8px;
+    }
+
+    /* ── Brand ── */
+    .brand-mark {
+      flex-shrink: 0;
+      display: block;
+    }
+    .brand-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--fg-1);
+      line-height: 1.15;
+      letter-spacing: -0.2px;
+    }
+    .brand-name-up {
+      background: linear-gradient(160deg,
+        #FF7700 0%,
+        #E61BA2 39.5%,
+        #C431C4 56.2%,
+        #9235D4 72.3%,
+        #7857DB 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg-page);
+      color: var(--fg-1);
+      font-size: 12px;
+      line-height: 1.5;
+      height: 380px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       HEADER
+       ───────────────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      height: 48px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-1);
+      flex-shrink: 0;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* The ● icon — brand fill */
+    .brand-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .brand-icon svg { width: 10px; height: 10px; }
+
+    .brand-label {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .brand-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--fg-1);
+      line-height: 1.2;
+      letter-spacing: -0.1px;
+    }
+    .brand-tag {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--fg-3);
+      line-height: 1.2;
+    }
+
+    /* Status chip */
+    .chip {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--fg-3);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-2);
+      border-radius: 4px;
+      padding: 2px 8px;
+      line-height: 18px;
+      transition: color .15s, background .15s, border-color .15s;
+      white-space: nowrap;
+    }
+    .chip.running {
+      color: var(--brand);
+      background: var(--brand-subtle);
+      border-color: #d1caf2;
+    }
+    .chip.done {
+      color: var(--ok-fg);
+      background: var(--ok-bg);
+      border-color: var(--ok-border);
+    }
+    .chip.error {
+      color: var(--err-fg);
+      background: var(--err-bg);
+      border-color: var(--err-border);
+    }
+
+    /* ─────────────────────────────────────────────────────
+       BODY / FORM
+       ───────────────────────────────────────────────────── */
+    .body {
+      padding: 14px 16px 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    /* Field */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--fg-2);
+      letter-spacing: 0.3px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      height: 32px;
+      padding: 0 10px;
+      background: var(--bg-input);
+      border: 1.5px solid transparent;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 11px;
+      color: var(--fg-1);
+      outline: none;
+      transition: background .12s, border-color .12s, box-shadow .12s;
+      /* Monospace for URL/ID inputs */
+      font-family: 'SF Mono', 'Menlo', 'Cascadia Code', monospace;
+    }
+    input[type="text"]::placeholder {
+      color: var(--fg-dis);
+      font-family: inherit;
+    }
+    input[type="text"]:hover:not(:focus) {
+      border-color: var(--border-3);
+    }
+    input[type="text"]:focus {
+      background: var(--bg-input-on);
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(125, 90, 231, 0.16);
+    }
+
+    /* Hint text */
+    .hint {
+      font-size: 10px;
+      color: var(--fg-3);
+      line-height: 1.45;
+    }
+
+    /* Accordion */
+    .acc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 0;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--fg-3);
+      transition: color .12s;
+    }
+    .acc-btn:hover { color: var(--fg-1); }
+
+    .acc-arrow {
+      width: 14px;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--fg-3);
+      transition: transform .15s;
+    }
+    .acc-btn.open .acc-arrow { transform: rotate(90deg); }
+
+    .acc-content { display: none; margin-top: 8px; }
+    .acc-content.open { display: block; }
+
+    /* ─────────────────────────────────────────────────────
+       DIVIDER
+       ───────────────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-1);
+      flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       FOOTER
+       ───────────────────────────────────────────────────── */
+    .footer {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    /* Primary button */
+    .btn-primary {
+      width: 100%;
+      height: 34px;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background .12s, opacity .12s;
+      letter-spacing: -0.1px;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--brand-hover);
+    }
+    .btn-primary:active:not(:disabled) {
+      background: var(--brand-active);
+    }
+    .btn-primary:disabled {
+      background: var(--bg-secondary);
+      color: var(--fg-dis);
+      cursor: not-allowed;
+    }
+
+    /* Spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .65s linear infinite;
+      flex-shrink: 0;
+    }
+
+    /* Progress */
+    .progress { display: none; }
+    .progress.on { display: flex; flex-direction: column; gap: 5px; }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--border-2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 2px;
+      width: 0%;
+      transition: width .3s ease;
+    }
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .progress-label {
+      font-size: 10px;
+      color: var(--fg-3);
+    }
+    .progress-pct {
+      font-size: 10px;
+      color: var(--fg-3);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Result */
+    .result { display: none; }
+
+    .result.ok {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      padding: 9px 11px;
+      background: var(--ok-bg);
+      border: 1px solid var(--ok-border);
+      border-radius: var(--radius-md);
+      font-size: 11px;
+      color: var(--ok-fg);
+    }
+    .result.err {
+      display: block;
+      padding: 9px 11px;
+      background: var(--err-bg);
+      border: 1px solid var(--err-border);
+      border-radius: var(--radius-md);
+      font-size: 11px;
+      color: var(--err-fg);
+    }
+    .result.warn {
+      display: block;
+      padding: 9px 11px;
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      border-radius: var(--radius-md);
+      font-size: 11px;
+      color: var(--warn-fg);
+    }
+
+    /* URL copy input inside result */
+    .url-copy {
+      width: 100%;
+      margin-top: 6px;
+      padding: 4px 8px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid var(--ok-border);
+      border-radius: var(--radius-sm);
+      font-size: 10px;
+      font-family: 'SF Mono', 'Menlo', monospace;
+      color: var(--ok-fg);
+      cursor: text;
+      outline: none;
+    }
+    .url-copy:focus { border-color: var(--ok-fg); }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="header">
+  <div class="brand-group">
+    <!-- RockUP brand mark — mountain shape from official logo -->
+    <svg class="brand-mark" width="24" height="22" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="markGrad" x1="0" y1="0" x2="14" y2="26" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FF7700"/>
+          <stop offset="0.395" stop-color="#E61BA2"/>
+          <stop offset="0.562" stop-color="#C431C4"/>
+          <stop offset="0.723" stop-color="#9235D4"/>
+          <stop offset="1" stop-color="#7857DB"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#markGrad)" d="M19.383 26H7.09943C7.09943 25.9753 7.1064 25.9506 7.10989 25.9294C7.70645 22.504 10.9335 20.2158 14.321 20.8196C16.9933 21.2963 18.9679 23.4328 19.383 26ZM27.1453 20.2122C26.7545 19.9756 26.3533 19.739 25.9522 19.513C26.1929 21.5223 26.3185 23.6905 26.2626 26H23.224C23.3043 22.9702 23.0496 20.2016 22.6205 17.7438C22.3239 17.6097 22.0274 17.479 21.7274 17.3589C18.4969 16.0135 15.0571 15.0954 11.5579 14.88C10.2288 14.7917 8.88562 14.7564 7.55644 14.8376C5.8156 17.8533 4.18639 21.5682 3.11538 26H0C0.914029 21.9355 2.27112 18.4183 3.7852 15.4238C2.88861 15.6427 2.00249 15.9111 1.12684 16.236C1.93621 14.661 3.41889 13.7252 5.03763 13.1214C6.50635 10.6001 8.04485 8.53425 9.42636 6.91692C13.2744 2.4004 16.7037 0.302815 16.8467 0.218064C17.4921 -0.173909 18.3259 -0.0255949 18.8039 0.567662C18.9085 0.698319 21.4239 3.85882 23.5171 9.4312C24.2392 11.3522 24.9579 13.7182 25.4812 16.4549C26.3813 17.2106 27.1662 18.1076 27.6302 19.2093C27.8325 19.6896 27.9791 20.1981 28 20.7278C27.693 20.5512 27.4209 20.3747 27.1453 20.2122ZM21.8495 14.202C21.4971 12.8848 21.1099 11.6912 20.7227 10.6424C19.5051 7.36186 18.1131 4.96765 17.2584 3.65754C16.013 4.59333 13.8953 6.35897 11.6417 9.02157C10.8811 9.91851 10.0683 10.9673 9.24844 12.1609C12.6324 11.8113 16.0758 12.3163 19.3342 13.2556C20.1924 13.5134 21.0331 13.8277 21.8495 14.1984V14.202Z"/>
+    </svg>
+    <div class="brand-label">
+      <span class="brand-name">Rock<span class="brand-name-up">UP</span></span>
+      <span class="brand-tag">Token Audit</span>
+    </div>
+  </div>
+  <div class="chip" id="chip">Готов</div>
+</header>
+
+<!-- ── Body ── -->
+<div class="body">
+
+  <div class="field">
+    <label class="field-label" for="scriptUrl">Apps Script URL</label>
+    <input type="text" id="scriptUrl"
+           placeholder="https://script.google.com/macros/s/…/exec" />
+  </div>
+
+  <div>
+    <button class="acc-btn" id="accBtn" onclick="toggleAcc()">
+      <span class="acc-arrow">
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+          <path d="M2.5 1.5L5.5 4L2.5 6.5" stroke="currentColor" stroke-width="1.3"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      Spreadsheet ID
+    </button>
+    <div class="acc-content" id="accContent">
+      <div class="field">
+        <label class="field-label" for="spreadsheetId">ID таблицы</label>
+        <input type="text" id="spreadsheetId"
+               placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms" />
+        <span class="hint">Если пусто — Apps Script создаст новую таблицу.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<hr class="divider" />
+
+<!-- ── Footer ── -->
+<footer class="footer">
+
+  <button class="btn-primary" id="runBtn" onclick="startAudit()">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+      <path d="M3 1.5L9.5 5.5L3 9.5V1.5Z" fill="white"/>
+    </svg>
+    Запустить аудит
+  </button>
+
+  <div class="progress" id="progress">
+    <div class="progress-bar">
+      <div class="progress-fill" id="barFill"></div>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label" id="statusTxt">Инициализация…</span>
+      <span class="progress-pct" id="statusPct">0%</span>
+    </div>
+  </div>
+
+  <div class="result" id="resultBox"></div>
+
+</footer>
+
+<script>
+  var running = false;
+
+  /* ── Init ── */
+  document.addEventListener('DOMContentLoaded', function () {
+    parent.postMessage({ pluginMessage: { type: 'ui-ready' } }, '*');
+  });
+
+  /* ── Messages from code.js ── */
+  window.onmessage = function (event) {
+    var msg = event.data && event.data.pluginMessage;
+    if (!msg) return;
+
+    if (msg.type === 'stored-config') {
+      if (msg.scriptUrl)     document.getElementById('scriptUrl').value = msg.scriptUrl;
+      if (msg.spreadsheetId) {
+        document.getElementById('spreadsheetId').value = msg.spreadsheetId;
+        openAcc();
+      }
+    }
+
+    if (msg.type === 'status') setStatus(msg.text, msg.pct);
+
+    if (msg.type === 'audit-complete') {
+      setStatus('Данные обновлены', 100);
+      setChip('done', 'Готово');
+      showOk(msg.sheetUrl || null);
+      if (msg.sheetId) {
+        document.getElementById('spreadsheetId').value = msg.sheetId;
+        openAcc();
+        parent.postMessage({ pluginMessage: { type: 'save-config', config: {
+          scriptUrl:     document.getElementById('scriptUrl').value.trim(),
+          spreadsheetId: msg.sheetId
+        }}}, '*');
+      }
+      resetBtn();
+    }
+
+    if (msg.type === 'data-ready') sendToSheets(msg.data, msg.scriptUrl, msg.spreadsheetId);
+
+    if (msg.type === 'error') {
+      showErr(msg.text);
+      setChip('error', 'Ошибка');
+      resetBtn();
+    }
+  };
+
+  /* ── UI helpers ── */
+  function setChip(cls, text) {
+    var el = document.getElementById('chip');
+    el.className = 'chip' + (cls ? ' ' + cls : '');
+    el.textContent = text;
+  }
+
+  function setStatus(text, pct) {
+    document.getElementById('progress').classList.add('on');
+    document.getElementById('statusTxt').textContent = text;
+    if (pct != null) {
+      document.getElementById('barFill').style.width = pct + '%';
+      document.getElementById('statusPct').textContent = pct + '%';
+    }
+  }
+
+  function showOk(url) {
+    var b = document.getElementById('resultBox');
+    b.className = 'result ok';
+    if (url) {
+      b.innerHTML =
+        '<span>✓ Таблица обновлена</span>' +
+        '<input class="url-copy" type="text" readonly value="' + url +
+        '" onclick="this.select()" />';
+      parent.postMessage({ pluginMessage: { type: 'open-url', url: url } }, '*');
+    } else {
+      b.innerHTML = '<span>✓ Данные отправлены. Найди таблицу в Google Drive.</span>';
+    }
+  }
+
+  function showErr(msg) {
+    var b = document.getElementById('resultBox');
+    b.className = 'result err';
+    b.textContent = '✗ ' + msg;
+  }
+
+  function resetBtn() {
+    running = false;
+    var btn = document.getElementById('runBtn');
+    btn.disabled = false;
+    btn.innerHTML =
+      '<svg width="11" height="11" viewBox="0 0 11 11" fill="none">' +
+      '<path d="M3 1.5L9.5 5.5L3 9.5V1.5Z" fill="white"/></svg>' +
+      ' Запустить аудит';
+    setChip('', 'Готов');
+  }
+
+  /* ── Accordion ── */
+  function toggleAcc() {
+    var content = document.getElementById('accContent');
+    if (content.classList.contains('open')) {
+      content.classList.remove('open');
+      document.getElementById('accBtn').classList.remove('open');
+    } else {
+      openAcc();
+    }
+  }
+
+  function openAcc() {
+    document.getElementById('accContent').classList.add('open');
+    document.getElementById('accBtn').classList.add('open');
+  }
+
+  /* ── Start audit ── */
+  function startAudit() {
+    if (running) return;
+    var url = document.getElementById('scriptUrl').value.trim();
+    var sid = document.getElementById('spreadsheetId').value.trim() || null;
+
+    if (!url || url.indexOf('https://script.google.com') !== 0) {
+      showErr('Введи корректный URL Apps Script');
+      return;
+    }
+
+    running = true;
+    document.getElementById('resultBox').className = 'result';
+    document.getElementById('progress').classList.remove('on');
+    document.getElementById('barFill').style.width = '0%';
+    document.getElementById('statusPct').textContent = '0%';
+
+    var btn = document.getElementById('runBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Работает…';
+
+    setChip('running', 'Работает');
+    setStatus('Читаем переменные…', 3);
+
+    parent.postMessage({ pluginMessage: {
+      type: 'save-config', config: { scriptUrl: url, spreadsheetId: sid }
+    }}, '*');
+    parent.postMessage({ pluginMessage: {
+      type: 'run-audit', scriptUrl: url, spreadsheetId: sid
+    }}, '*');
+  }
+
+  /* ── Fallback: UI fetch ── */
+  async function sendToSheets(data, scriptUrl, spreadsheetId) {
+    setStatus('Отправляю в Sheets…', 92);
+    try {
+      var response = await fetch(scriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ data: data, spreadsheetId: spreadsheetId || null }),
+        redirect: 'follow'
+      });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      var result = await response.json();
+      setStatus('Готово', 100);
+      setChip('done', 'Готово');
+      showOk(result.url || null);
+    } catch (e) {
+      setStatus('CORS — скачиваю JSON…', 95);
+      downloadJson(data);
+      var b = document.getElementById('resultBox');
+      b.className = 'result warn';
+      b.innerHTML =
+        '⚠ Прямая отправка заблокирована (CORS).<br><br>' +
+        '<strong>JSON скачан.</strong> Загрузи в Google Drive или используй Figma Desktop.';
+    }
+    resetBtn();
+  }
+
+  function downloadJson(data) {
+    var date = new Date().toISOString().slice(0, 10);
+    var json = JSON.stringify(data, null, 2);
+    var blob = new Blob([json], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'rockup-audit-' + date + '.json';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
+
 <head>
   <meta charset="UTF-8" />
   <title>RockUP Token Audit</title>
