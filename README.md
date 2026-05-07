@@ -9,8 +9,8 @@
 ## Установка (один раз)
 
 1. Клонируй репо
-   ```
-   git clone <repo-url>
+   ```bash
+   git clone https://github.com/Diceyka/rockup-token-audit.git
    ```
 
 2. Открой **Figma Desktop** → меню → **Plugins → Development → Import plugin from manifest...**
@@ -27,6 +27,14 @@
 2. `Cmd+Option+P` → **Plugins → Development → RockUP Token Audit**
 3. URL и Spreadsheet ID уже заполнены — нажми **▶ Запустить аудит**
 4. Через несколько секунд таблица обновится
+
+---
+
+## Получить обновления
+
+```bash
+git pull
+```
 
 ---
 
