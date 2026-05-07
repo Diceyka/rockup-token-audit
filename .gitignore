@@ -1,0 +1,14 @@
+.DS_Store
+*.xlsx
+*.bak
+node_modules/
+.skill/
+outputs/
+inbox/
+archive/
+daily/
+processed/
+templates/
+graphify-out/
+*.html
+ds-changelog.json
