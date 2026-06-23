@@ -12,3 +12,10 @@ templates/
 graphify-out/
 *.html
 ds-changelog.json
+
+# Internal Cowork / Claude files
+CLAUDE.md
+.claude/
+assistant-bot/
+context_report.docx
+figma-plugin/2026-06-10_rockup_variables.json

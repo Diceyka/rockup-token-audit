@@ -2,7 +2,7 @@
 
 Плагин автоматически собирает все токены из Figma Variables API и отправляет их в Google Sheets. Одна кнопка — и таблица обновлена.
 
-**Google Sheets:** [Открыть таблицу](https://docs.google.com/spreadsheets/d/1Cv1kW-06_uk2FIR6okKtea9CwL_CMpWiwufnuHDPs7U/edit)
+**Google Sheets:** [Открыть таблицу](https://docs.google.com/spreadsheets/d/1GvxfhQqdfbtR6czzPKbnekzLgSpGhSnYnA9EakRWN_Q/edit)
 
 ---
 
@@ -42,14 +42,15 @@ git pull
 
 | Лист | Содержание |
 |------|-----------|
-| **Summary** | Метрики аудита + топ shared токенов |
+| **Dashboard** | Дата последнего аудита |
 | **Matrix** | Матрица токен × компонент |
-| **Token overlaps** | Токены, используемые в 2+ компонентах |
-| **Component details** | Полный список: cmp-токен → sys-токен |
 | **Light Dark** | Маппинг Light/Dark alias по всем токенам |
-| **WCAG 2.1 AA** | Контрастность FG/BG пар |
-| **Alias duplicates** | Токены с одинаковыми ref-значениями |
+| **Component details** | Полный список: cmp-токен → sys-токен |
+| **WCAG** | Контрастность FG/BG пар (Pass/Fail) |
+| **Token overlaps** | Токены, используемые в 2+ компонентах |
 | **Ref Colors** | Все ref-цвета с hex и визуальным свотчем |
+| **Action items** | ⚠️ Не перезаписывается — ручные заметки |
+| **Methodology** | ⚠️ Не перезаписывается — документация |
 
 ---
 
