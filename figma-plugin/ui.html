@@ -2,653 +2,728 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>RockUP Token Audit</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>RockUP Token Audit Suite</title>
   <style>
-    /* ─────────────────────────────────────────────────────
-       RockUP Ref / Sys tokens — light mode resolved values
-       ───────────────────────────────────────────────────── */
     :root {
-      /* Surfaces */
-      --bg-page:       #fafafe;   /* rp/ref/color/gray/10      */
-      --bg-primary:    #ffffff;   /* rp/sys/bg/surface/primary */
-      --bg-secondary:  #f5f5fb;   /* rp/sys/bg/surface/secondary */
-      --bg-input:      #ececf6;   /* rp/sys/bg/fill/input/default */
-      --bg-input-on:   #ffffff;   /* rp/sys/bg/fill/input/active  */
-      --bg-disabled:   #f5f5fb;   /* rp/sys/bg/fill/disabled      */
-
-      /* Brand */
-      --brand:         #7d5ae7;   /* rp/sys/bg/fill/brand/default */
-      --brand-hover:   #502eb8;   /* rp/sys/bg/fill/brand/hover   */
-      --brand-active:  #603bce;   /* rp/sys/bg/fill/brand/active  */
-      --brand-subtle:  #f1f1f9;   /* rp/sys/bg/fill/brand/subtlest-default */
-
-      /* Foreground */
-      --fg-1:          #010119;   /* rp/ref/color/gray/190       */
-      --fg-2:          #3c3c57;   /* rp/ref/color/gray/160       */
-      --fg-3:          #757593;   /* rp/sys/color/fg/tertiary    */
-      --fg-dis:        #acacc8;   /* rp/sys/color/fg/disabled    */
-      --fg-brand:      #603bce;   /* rp/sys/color/fg/brand/default */
-
-      /* Borders */
-      --border-1:      #ececf6;   /* rp/sys/color/border/primary  */
-      --border-2:      #e1e1ef;   /* rp/sys/color/border/secondary */
-      --border-3:      #acacc8;   /* rp/sys/color/border/neutral/default */
-      --border-input:  #acacc8;   /* rp/sys/color/border/input/default */
-      --border-focus:  #7d5ae7;   /* rp/sys/color/border/input/hover */
-
-      /* Status — success */
-      --ok-bg:         #ebfaf0;   /* bg/surface/success/subtlest */
-      --ok-border:     #b5edc8;   /* border/success/subtlest     */
-      --ok-fg:         #29994e;   /* fg/success/bolder           */
-
-      /* Status — error */
-      --err-bg:        #fff5f6;   /* bg/surface/error/subtlest   */
-      --err-border:    #ffd1d5;   /* border/error/subtler        */
-      --err-fg:        #ed0c1f;   /* fg/error/default            */
-
-      /* Status — warning */
-      --warn-bg:       #fffcf0;   /* bg/surface/warning/subtlest */
-      --warn-border:   #ffdb4c;   /* border/warning/subtler      */
-      --warn-fg:       #d66700;   /* fg/warning/bolder           */
-
-      /* Focus ring */
-      --focus-ring:    #8f71ea;   /* rp/sys/color/border/focus   */
-
-      /* Misc */
-      --radius-sm:  4px;
-      --radius-md:  6px;
-      --radius-lg:  8px;
+      color-scheme: only light;
+      --bg-page: #fafafe;
+      --bg-card: #ffffff;
+      --bg-soft: #f5f5fb;
+      --fg-1: #010119;
+      --fg-2: #3c3c57;
+      --fg-3: #757593;
+      --brand: #7d5ae7;
+      --brand-hover: #654dad;
+      --brand-soft: #f1f1f9;
+      --border: #e1e1ef;
+      --border-strong: #acacc8;
+      --ok-bg: #ebfaf0;
+      --ok-border: #b5edc8;
+      --ok-fg: #29994e;
+      --warn-bg: #fffcf0;
+      --warn-border: #ffdb4c;
+      --warn-fg: #d66700;
+      --err-bg: #fff5f6;
+      --err-border: #ffd1d5;
+      --err-fg: #ed0c1f;
     }
 
-    /* ── Brand ── */
-    .brand-mark {
-      flex-shrink: 0;
-      display: block;
-    }
-    .brand-name {
-      font-size: 13px;
-      font-weight: 700;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      height: 720px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 12px;
+      line-height: 1.45;
+      background: var(--bg-page);
       color: var(--fg-1);
-      line-height: 1.15;
-      letter-spacing: -0.2px;
+      -webkit-font-smoothing: antialiased;
     }
-    .brand-name-up {
-      background: linear-gradient(160deg,
-        #FF7700 0%,
-        #E61BA2 39.5%,
-        #C431C4 56.2%,
-        #9235D4 72.3%,
-        #7857DB 100%
-      );
+
+    .header {
+      height: 58px;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .brand-logo {
+      height: 32px;
+      width: auto;
+      flex: 0 0 auto;
+      display: block;
+      filter: drop-shadow(0 6px 12px rgba(80, 46, 184, .12));
+    }
+    .brand-copy {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .wordmark {
+      display: flex;
+      align-items: baseline;
+      gap: 0;
+      font-weight: 900;
+      letter-spacing: -0.38px;
+      color: var(--fg-1);
+      line-height: 1.05;
+      font-size: 15px;
+    }
+    .wordmark-up {
+      background: linear-gradient(160deg, #FF7700 0%, #E61BA2 39.5%, #C431C4 56.2%, #9235D4 72.3%, #7857DB 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
+    .title { font-weight: 800; letter-spacing: -0.25px; }
+    .subtitle { color: var(--fg-3); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* ── Reset ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg-page);
-      color: var(--fg-1);
-      font-size: 12px;
-      line-height: 1.5;
-      height: 380px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ─────────────────────────────────────────────────────
-       HEADER
-       ───────────────────────────────────────────────────── */
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      height: 48px;
-      background: var(--bg-primary);
-      border-bottom: 1px solid var(--border-1);
-      flex-shrink: 0;
-    }
-
-    .brand-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* The ● icon — brand fill */
-    .brand-icon {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--brand);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .brand-icon svg { width: 10px; height: 10px; }
-
-    .brand-label {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .brand-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--fg-1);
-      line-height: 1.2;
-      letter-spacing: -0.1px;
-    }
-    .brand-tag {
-      font-size: 10px;
-      font-weight: 400;
-      color: var(--fg-3);
-      line-height: 1.2;
-    }
-
-    /* Status chip */
     .chip {
-      font-size: 10px;
-      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
       color: var(--fg-3);
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-2);
-      border-radius: 4px;
-      padding: 2px 8px;
-      line-height: 18px;
-      transition: color .15s, background .15s, border-color .15s;
-      white-space: nowrap;
-    }
-    .chip.running {
-      color: var(--brand);
-      background: var(--brand-subtle);
-      border-color: #d1caf2;
-    }
-    .chip.done {
-      color: var(--ok-fg);
-      background: var(--ok-bg);
-      border-color: var(--ok-border);
-    }
-    .chip.error {
-      color: var(--err-fg);
-      background: var(--err-bg);
-      border-color: var(--err-border);
-    }
-
-    /* ─────────────────────────────────────────────────────
-       BODY / FORM
-       ───────────────────────────────────────────────────── */
-    .body {
-      padding: 14px 16px 12px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow: hidden;
-    }
-
-    /* Field */
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .field-label {
       font-size: 10px;
-      font-weight: 500;
-      color: var(--fg-2);
-      letter-spacing: 0.3px;
+      font-weight: 700;
+    }
+    .chip.ok { background: var(--ok-bg); border-color: var(--ok-border); color: var(--ok-fg); }
+    .chip.warn { background: var(--warn-bg); border-color: var(--warn-border); color: var(--warn-fg); }
+    .chip.err { background: var(--err-bg); border-color: var(--err-border); color: var(--err-fg); }
+    .chip.run { background: var(--brand-soft); border-color: #d1caf2; color: var(--brand); }
+
+    .main {
+      flex: 1 1 auto;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
     }
 
+    .side {
+      padding: 16px;
+      border-right: 1px solid var(--border);
+      background: var(--bg-card);
+      overflow: auto;
+    }
+
+    .content { padding: 16px; overflow: auto; }
+    .section { display: flex; flex-direction: column; gap: 12px; }
+    .group { display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .group:last-child { border-bottom: 0; padding-bottom: 0; }
+    .label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--fg-3); }
+
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field-label { font-size: 10px; font-weight: 700; color: var(--fg-2); }
     input[type="text"] {
-      width: 100%;
-      height: 32px;
-      padding: 0 10px;
-      background: var(--bg-input);
-      border: 1.5px solid transparent;
-      border-radius: var(--radius-md);
-      font-family: inherit;
-      font-size: 11px;
-      color: var(--fg-1);
-      outline: none;
-      transition: background .12s, border-color .12s, box-shadow .12s;
-      /* Monospace for URL/ID inputs */
-      font-family: 'SF Mono', 'Menlo', 'Cascadia Code', monospace;
+      width: 100%; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+      padding: 0 9px; font: inherit; font-size: 10px; color: var(--fg-1);
+      outline: none; background: var(--bg-soft); font-family: "SF Mono", Menlo, Consolas, monospace;
     }
-    input[type="text"]::placeholder {
-      color: var(--fg-dis);
-      font-family: inherit;
-    }
-    input[type="text"]:hover:not(:focus) {
-      border-color: var(--border-3);
-    }
-    input[type="text"]:focus {
-      background: var(--bg-input-on);
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 2px rgba(125, 90, 231, 0.16);
-    }
+    input[type="text"]:focus { border-color: var(--brand); background: white; box-shadow: 0 0 0 2px rgba(125,90,231,.14); }
+    .hint { font-size: 10px; color: var(--fg-3); }
 
-    /* Hint text */
-    .hint {
-      font-size: 10px;
-      color: var(--fg-3);
-      line-height: 1.45;
-    }
-
-    /* Accordion */
-    .acc-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 2px 0;
-      font-family: inherit;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--fg-3);
-      transition: color .12s;
-    }
-    .acc-btn:hover { color: var(--fg-1); }
-
-    .acc-arrow {
-      width: 14px;
-      height: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--fg-3);
-      transition: transform .15s;
-    }
-    .acc-btn.open .acc-arrow { transform: rotate(90deg); }
-
-    .acc-content { display: none; margin-top: 8px; }
-    .acc-content.open { display: block; }
-
-    /* ─────────────────────────────────────────────────────
-       DIVIDER
-       ───────────────────────────────────────────────────── */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border-1);
-      flex-shrink: 0;
-    }
-
-    /* ─────────────────────────────────────────────────────
-       FOOTER
-       ───────────────────────────────────────────────────── */
-    .footer {
-      padding: 12px 16px;
+    .drop {
+      position: relative;
+      padding: 16px 12px;
+      border: 1.5px dashed var(--border-strong);
+      border-radius: 12px;
+      background: var(--bg-soft);
+      min-height: 120px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      flex-shrink: 0;
-    }
-
-    /* Primary button */
-    .btn-primary {
-      width: 100%;
-      height: 34px;
-      background: var(--brand);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-md);
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      gap: 6px;
-      transition: background .12s, opacity .12s;
-      letter-spacing: -0.1px;
-    }
-    .btn-primary:hover:not(:disabled) {
-      background: var(--brand-hover);
-    }
-    .btn-primary:active:not(:disabled) {
-      background: var(--brand-active);
-    }
-    .btn-primary:disabled {
-      background: var(--bg-secondary);
-      color: var(--fg-dis);
-      cursor: not-allowed;
-    }
-
-    /* Spinner */
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner {
-      width: 12px;
-      height: 12px;
-      border: 1.5px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin .65s linear infinite;
-      flex-shrink: 0;
-    }
-
-    /* Progress */
-    .progress { display: none; }
-    .progress.on { display: flex; flex-direction: column; gap: 5px; }
-
-    .progress-bar {
-      height: 3px;
-      background: var(--border-2);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--brand);
-      border-radius: 2px;
-      width: 0%;
-      transition: width .3s ease;
-    }
-    .progress-row {
-      display: flex;
       align-items: center;
+      text-align: center;
+      gap: 8px;
+      transition: border-color .12s, background .12s;
+    }
+    .drop:hover { border-color: var(--brand); background: var(--brand-soft); }
+    .drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .drop-title { font-weight: 800; }
+    .drop-text { color: var(--fg-3); font-size: 11px; }
+    .file-name {
+      margin-top: 4px;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--brand);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .checkboxes { display: flex; flex-direction: column; gap: 7px; }
+    .checkline { display: flex; align-items: flex-start; gap: 8px; color: var(--fg-2); }
+    .checkline input { margin-top: 2px; accent-color: var(--brand); }
+
+    .btn {
+      width: 100%; min-height: 36px; border-radius: 8px; cursor: pointer;
+      font: inherit; font-weight: 800;
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      transition: .12s background, .12s border-color, .12s color, .12s opacity;
+    }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-primary { border: none; background: var(--brand); color: white; }
+    .btn-primary:hover:not(:disabled) { background: var(--brand-hover); }
+    .btn-secondary { background: white; color: var(--fg-2); border: 1px solid var(--border); }
+    .btn-secondary:hover:not(:disabled) { border-color: var(--border-strong); background: var(--bg-soft); }
+    .btn-danger { background: var(--err-bg); color: var(--err-fg); border: 1px solid var(--err-border); }
+    .btn-danger:hover:not(:disabled) { border-color: var(--err-fg); }
+
+    .progress { display: none; flex-direction: column; gap: 5px; padding-top: 2px; }
+    .progress.on { display: flex; }
+    .bar { height: 4px; border-radius: 3px; background: var(--border); overflow: hidden; }
+    .fill { height: 100%; width: 0%; background: var(--brand); transition: width .25s; }
+    .status-row { display: flex; justify-content: space-between; gap: 8px; color: var(--fg-3); font-size: 10px; }
+    #statusText { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .work-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 10px 28px rgba(1, 1, 25, .04);
+    }
+    .work-top {
+      display: flex;
       justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 12px;
     }
-    .progress-label {
-      font-size: 10px;
-      color: var(--fg-3);
+    .work-title {
+      font-size: 18px;
+      line-height: 1.15;
+      font-weight: 950;
+      letter-spacing: -0.45px;
     }
-    .progress-pct {
-      font-size: 10px;
+    .work-subtitle {
+      margin-top: 4px;
       color: var(--fg-3);
+      font-size: 11px;
+    }
+    .work-progress {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 54px;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0 14px;
+    }
+    .work-progress .bar { height: 7px; }
+    .work-percent {
+      font-size: 16px;
+      font-weight: 950;
+      color: var(--brand);
+      text-align: right;
       font-variant-numeric: tabular-nums;
     }
-
-    /* Result */
-    .result { display: none; }
-
-    .result.ok {
-      display: flex;
-      align-items: flex-start;
-      gap: 7px;
-      padding: 9px 11px;
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .step {
+      min-height: 76px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 9px;
+      background: var(--bg-soft);
+      color: var(--fg-3);
+    }
+    .step.is-active {
+      border-color: #d1caf2;
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+    .step.is-done {
+      border-color: var(--ok-border);
       background: var(--ok-bg);
-      border: 1px solid var(--ok-border);
-      border-radius: var(--radius-md);
-      font-size: 11px;
       color: var(--ok-fg);
     }
-    .result.err {
-      display: block;
-      padding: 9px 11px;
-      background: var(--err-bg);
-      border: 1px solid var(--err-border);
-      border-radius: var(--radius-md);
-      font-size: 11px;
-      color: var(--err-fg);
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: currentColor;
+      opacity: .6;
+      margin-bottom: 8px;
     }
-    .result.warn {
-      display: block;
-      padding: 9px 11px;
-      background: var(--warn-bg);
-      border: 1px solid var(--warn-border);
-      border-radius: var(--radius-md);
+    .step-title {
       font-size: 11px;
-      color: var(--warn-fg);
+      font-weight: 900;
+      color: currentColor;
+      line-height: 1.2;
+    }
+    .step-text {
+      margin-top: 3px;
+      font-size: 10px;
+      line-height: 1.35;
+      color: var(--fg-3);
+    }
+    .progress-log {
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .progress-log-title {
+      padding: 8px 10px;
+      background: var(--bg-soft);
+      border-bottom: 1px solid var(--border);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .35px;
+      color: var(--fg-3);
+    }
+    .progress-log-body {
+      max-height: 150px;
+      overflow: auto;
+      padding: 7px 10px;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 10px;
+      color: var(--fg-2);
+      white-space: pre-wrap;
     }
 
-    /* URL copy input inside result */
-    .url-copy {
-      width: 100%;
-      margin-top: 6px;
-      padding: 4px 8px;
-      background: rgba(255,255,255,0.7);
-      border: 1px solid var(--ok-border);
-      border-radius: var(--radius-sm);
-      font-size: 10px;
-      font-family: 'SF Mono', 'Menlo', monospace;
-      color: var(--ok-fg);
-      cursor: text;
-      outline: none;
+    .empty {
+      min-height: 100%; display: grid; place-items: center; text-align: center;
+      color: var(--fg-3); border: 1px dashed var(--border); border-radius: 14px; background: rgba(255,255,255,.55); padding: 24px;
     }
-    .url-copy:focus { border-color: var(--ok-fg); }
+
+    .result-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+    .result-title { font-size: 18px; font-weight: 900; letter-spacing: -0.45px; }
+    .result-meta { color: var(--fg-3); font-size: 11px; margin-top: 2px; }
+    .status-card { border-radius: 999px; padding: 5px 10px; font-size: 10px; font-weight: 900; border: 1px solid var(--border); }
+    .status-card.pass { background: var(--ok-bg); border-color: var(--ok-border); color: var(--ok-fg); }
+    .status-card.warning { background: var(--warn-bg); border-color: var(--warn-border); color: var(--warn-fg); }
+    .status-card.fail { background: var(--err-bg); border-color: var(--err-border); color: var(--err-fg); }
+
+    .notice { border-radius: 10px; padding: 10px 12px; margin: 10px 0; font-size: 12px; }
+    .notice.ok { background: var(--ok-bg); border: 1px solid var(--ok-border); color: var(--ok-fg); }
+    .notice.warn { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-fg); }
+    .notice.err { background: var(--err-bg); border: 1px solid var(--err-border); color: var(--err-fg); }
+
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 12px 0; }
+    .metric { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+    .metric-value { font-size: 18px; font-weight: 900; letter-spacing: -0.4px; color: var(--fg-1); }
+    .metric-label { color: var(--fg-3); font-size: 10px; margin-top: 2px; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; background: white; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    th, td { border-bottom: 1px solid var(--border); padding: 7px 8px; text-align: left; vertical-align: top; color: var(--fg-1); }
+    th { background: var(--bg-soft); color: var(--fg-3); font-size: 10px; text-transform: uppercase; letter-spacing: .35px; }
+    tr:last-child td { border-bottom: 0; }
+    .sev { font-weight: 900; font-size: 10px; text-transform: uppercase; }
+    .sev.error { color: var(--err-fg); }
+    .sev.warning { color: var(--warn-fg); }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 10px; }
+
+    .footer {
+      flex: 0 0 auto;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-card);
+      display: flex;
+      justify-content: space-between;
+      color: var(--fg-3);
+      font-size: 10px;
+    }
   </style>
 </head>
 <body>
-
-<!-- ── Header ── -->
-<header class="header">
-  <div class="brand-group">
-    <!-- RockUP brand mark — mountain shape from official logo -->
-    <svg class="brand-mark" width="24" height="22" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="markGrad" x1="0" y1="0" x2="14" y2="26" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#FF7700"/>
-          <stop offset="0.395" stop-color="#E61BA2"/>
-          <stop offset="0.562" stop-color="#C431C4"/>
-          <stop offset="0.723" stop-color="#9235D4"/>
-          <stop offset="1" stop-color="#7857DB"/>
-        </linearGradient>
-      </defs>
-      <path fill="url(#markGrad)" d="M19.383 26H7.09943C7.09943 25.9753 7.1064 25.9506 7.10989 25.9294C7.70645 22.504 10.9335 20.2158 14.321 20.8196C16.9933 21.2963 18.9679 23.4328 19.383 26ZM27.1453 20.2122C26.7545 19.9756 26.3533 19.739 25.9522 19.513C26.1929 21.5223 26.3185 23.6905 26.2626 26H23.224C23.3043 22.9702 23.0496 20.2016 22.6205 17.7438C22.3239 17.6097 22.0274 17.479 21.7274 17.3589C18.4969 16.0135 15.0571 15.0954 11.5579 14.88C10.2288 14.7917 8.88562 14.7564 7.55644 14.8376C5.8156 17.8533 4.18639 21.5682 3.11538 26H0C0.914029 21.9355 2.27112 18.4183 3.7852 15.4238C2.88861 15.6427 2.00249 15.9111 1.12684 16.236C1.93621 14.661 3.41889 13.7252 5.03763 13.1214C6.50635 10.6001 8.04485 8.53425 9.42636 6.91692C13.2744 2.4004 16.7037 0.302815 16.8467 0.218064C17.4921 -0.173909 18.3259 -0.0255949 18.8039 0.567662C18.9085 0.698319 21.4239 3.85882 23.5171 9.4312C24.2392 11.3522 24.9579 13.7182 25.4812 16.4549C26.3813 17.2106 27.1662 18.1076 27.6302 19.2093C27.8325 19.6896 27.9791 20.1981 28 20.7278C27.693 20.5512 27.4209 20.3747 27.1453 20.2122ZM21.8495 14.202C21.4971 12.8848 21.1099 11.6912 20.7227 10.6424C19.5051 7.36186 18.1131 4.96765 17.2584 3.65754C16.013 4.59333 13.8953 6.35897 11.6417 9.02157C10.8811 9.91851 10.0683 10.9673 9.24844 12.1609C12.6324 11.8113 16.0758 12.3163 19.3342 13.2556C20.1924 13.5134 21.0331 13.8277 21.8495 14.1984V14.202Z"/>
-    </svg>
-    <div class="brand-label">
-      <span class="brand-name">Rock<span class="brand-name-up">UP</span></span>
-      <span class="brand-tag">Token Audit</span>
+  <header class="header">
+    <div class="brand">
+      <svg class="brand-logo" width="319" height="75" viewBox="0 0 319 75" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="RockUP">
+<g clip-path="url(#paint0_angular_3572_320254_clip_path)" data-figma-skip-parse="true"><g transform="matrix(0.0345 0.0325 -0.0354276 0.0376078 42 44.3725)"><foreignObject x="-1311.37" y="-1311.37" width="2622.75" height="2622.75"><div xmlns="http://www.w3.org/1999/xhtml" style="background:conic-gradient(from 90deg,rgba(108, 70, 206, 1) 0deg,rgba(105, 71, 209, 1) 1.14453deg,rgba(245, 0, 102, 1) 171.462deg,rgba(255, 187, 51, 1) 240.826deg,rgba(245, 0, 91, 1) 299.259deg,rgba(108, 70, 206, 1) 360deg);height:100%;width:100%;opacity:1"></div></foreignObject></g></g><path d="M55.56 74H20.35C20.35 73.93 20.37 73.86 20.38 73.8C22.09 64.1 31.34 57.62 41.05 59.33C48.71 60.68 54.37 66.73 55.56 74ZM77.81 57.61C76.69 56.94 75.54 56.27 74.39 55.63C75.08 61.32 75.44 67.46 75.28 74H66.57C66.8 65.42 66.07 57.58 64.84 50.62C63.99 50.24 63.14 49.87 62.28 49.53C53.02 45.72 43.16 43.12 33.13 42.51C29.32 42.26 25.47 42.16 21.66 42.39C16.67 50.93 12 61.45 8.93 74H0C2.62 62.49 6.51 52.53 10.85 44.05C8.28 44.67 5.74 45.43 3.23 46.35C5.55 41.89 9.8 39.24 14.44 37.53C18.65 30.39 23.06 24.54 27.02 19.96C38.05 7.17002 47.88 1.23002 48.29 0.990017C50.14 -0.119983 52.53 0.300017 53.9 1.98002C54.2 2.35002 61.41 11.3 67.41 27.08C69.48 32.52 71.54 39.22 73.04 46.97C75.62 49.11 77.87 51.65 79.2 54.77C79.78 56.13 80.2 57.57 80.26 59.07C79.38 58.57 78.6 58.07 77.81 57.61ZM62.63 40.59C61.62 36.86 60.51 33.48 59.4 30.51C55.91 21.22 51.92 14.44 49.47 10.73C45.9 13.38 39.83 18.38 33.37 25.92C31.19 28.46 28.86 31.43 26.51 34.81C36.21 33.82 46.08 35.25 55.42 37.91C57.88 38.64 60.29 39.53 62.63 40.58V40.59Z" data-figma-gradient-fill="{&#34;type&#34;:&#34;GRADIENT_ANGULAR&#34;,&#34;stops&#34;:[{&#34;color&#34;:{&#34;r&#34;:0.41499996185302734,&#34;g&#34;:0.27999997138977051,&#34;b&#34;:0.81999999284744263,&#34;a&#34;:1.0},&#34;position&#34;:0.0031792547088116407},{&#34;color&#34;:{&#34;r&#34;:0.96078431606292725,&#34;g&#34;:0.0,&#34;b&#34;:0.40032678842544556,&#34;a&#34;:1.0},&#34;position&#34;:0.47628453373908997},{&#34;color&#34;:{&#34;r&#34;:1.0,&#34;g&#34;:0.73333334922790527,&#34;b&#34;:0.20000000298023224,&#34;a&#34;:1.0},&#34;position&#34;:0.66896033287048340},{&#34;color&#34;:{&#34;r&#34;:0.96078437566757202,&#34;g&#34;:0.0,&#34;b&#34;:0.35842731595039368,&#34;a&#34;:1.0},&#34;position&#34;:0.83127593994140625}],&#34;stopsVar&#34;:[],&#34;transform&#34;:{&#34;m00&#34;:69.0,&#34;m01&#34;:-70.855293273925781,&#34;m02&#34;:42.927650451660156,&#34;m10&#34;:64.999992370605469,&#34;m11&#34;:75.215629577636719,&#34;m12&#34;:-25.735307693481445},&#34;opacity&#34;:1.0,&#34;blendMode&#34;:&#34;NORMAL&#34;,&#34;visible&#34;:true}"/>
+<path d="M55.56 74H20.35C20.35 73.93 20.37 73.86 20.38 73.8C22.09 64.1 31.34 57.62 41.05 59.33C48.71 60.68 54.37 66.73 55.56 74ZM77.81 57.61C76.69 56.94 75.54 56.27 74.39 55.63C75.08 61.32 75.44 67.46 75.28 74H66.57C66.8 65.42 66.07 57.58 64.84 50.62C63.99 50.24 63.14 49.87 62.28 49.53C53.02 45.72 43.16 43.12 33.13 42.51C29.32 42.26 25.47 42.16 21.66 42.39C16.67 50.93 12 61.45 8.93 74H0C2.62 62.49 6.51 52.53 10.85 44.05C8.28 44.67 5.74 45.43 3.23 46.35C5.55 41.89 9.8 39.24 14.44 37.53C18.65 30.39 23.06 24.54 27.02 19.96C38.05 7.17002 47.88 1.23002 48.29 0.990017C50.14 -0.119983 52.53 0.300017 53.9 1.98002C54.2 2.35002 61.41 11.3 67.41 27.08C69.48 32.52 71.54 39.22 73.04 46.97C75.62 49.11 77.87 51.65 79.2 54.77C79.78 56.13 80.2 57.57 80.26 59.07C79.38 58.57 78.6 58.07 77.81 57.61ZM62.63 40.59C61.62 36.86 60.51 33.48 59.4 30.51C55.91 21.22 51.92 14.44 49.47 10.73C45.9 13.38 39.83 18.38 33.37 25.92C31.19 28.46 28.86 31.43 26.51 34.81C36.21 33.82 46.08 35.25 55.42 37.91C57.88 38.64 60.29 39.53 62.63 40.58V40.59Z" fill="url(#paint1_radial_3572_320254)"/>
+<path d="M55.56 74H20.35C20.35 73.93 20.37 73.86 20.38 73.8C22.09 64.1 31.34 57.62 41.05 59.33C48.71 60.68 54.37 66.73 55.56 74ZM77.81 57.61C76.69 56.94 75.54 56.27 74.39 55.63C75.08 61.32 75.44 67.46 75.28 74H66.57C66.8 65.42 66.07 57.58 64.84 50.62C63.99 50.24 63.14 49.87 62.28 49.53C53.02 45.72 43.16 43.12 33.13 42.51C29.32 42.26 25.47 42.16 21.66 42.39C16.67 50.93 12 61.45 8.93 74H0C2.62 62.49 6.51 52.53 10.85 44.05C8.28 44.67 5.74 45.43 3.23 46.35C5.55 41.89 9.8 39.24 14.44 37.53C18.65 30.39 23.06 24.54 27.02 19.96C38.05 7.17002 47.88 1.23002 48.29 0.990017C50.14 -0.119983 52.53 0.300017 53.9 1.98002C54.2 2.35002 61.41 11.3 67.41 27.08C69.48 32.52 71.54 39.22 73.04 46.97C75.62 49.11 77.87 51.65 79.2 54.77C79.78 56.13 80.2 57.57 80.26 59.07C79.38 58.57 78.6 58.07 77.81 57.61ZM62.63 40.59C61.62 36.86 60.51 33.48 59.4 30.51C55.91 21.22 51.92 14.44 49.47 10.73C45.9 13.38 39.83 18.38 33.37 25.92C31.19 28.46 28.86 31.43 26.51 34.81C36.21 33.82 46.08 35.25 55.42 37.91C57.88 38.64 60.29 39.53 62.63 40.58V40.59Z" fill="url(#paint2_radial_3572_320254)"/>
+<path d="M55.56 74H20.35C20.35 73.93 20.37 73.86 20.38 73.8C22.09 64.1 31.34 57.62 41.05 59.33C48.71 60.68 54.37 66.73 55.56 74ZM77.81 57.61C76.69 56.94 75.54 56.27 74.39 55.63C75.08 61.32 75.44 67.46 75.28 74H66.57C66.8 65.42 66.07 57.58 64.84 50.62C63.99 50.24 63.14 49.87 62.28 49.53C53.02 45.72 43.16 43.12 33.13 42.51C29.32 42.26 25.47 42.16 21.66 42.39C16.67 50.93 12 61.45 8.93 74H0C2.62 62.49 6.51 52.53 10.85 44.05C8.28 44.67 5.74 45.43 3.23 46.35C5.55 41.89 9.8 39.24 14.44 37.53C18.65 30.39 23.06 24.54 27.02 19.96C38.05 7.17002 47.88 1.23002 48.29 0.990017C50.14 -0.119983 52.53 0.300017 53.9 1.98002C54.2 2.35002 61.41 11.3 67.41 27.08C69.48 32.52 71.54 39.22 73.04 46.97C75.62 49.11 77.87 51.65 79.2 54.77C79.78 56.13 80.2 57.57 80.26 59.07C79.38 58.57 78.6 58.07 77.81 57.61ZM62.63 40.59C61.62 36.86 60.51 33.48 59.4 30.51C55.91 21.22 51.92 14.44 49.47 10.73C45.9 13.38 39.83 18.38 33.37 25.92C31.19 28.46 28.86 31.43 26.51 34.81C36.21 33.82 46.08 35.25 55.42 37.91C57.88 38.64 60.29 39.53 62.63 40.58V40.59Z" fill="url(#paint3_radial_3572_320254)"/>
+<path d="M55.56 74H20.35C20.35 73.93 20.37 73.86 20.38 73.8C22.09 64.1 31.34 57.62 41.05 59.33C48.71 60.68 54.37 66.73 55.56 74ZM77.81 57.61C76.69 56.94 75.54 56.27 74.39 55.63C75.08 61.32 75.44 67.46 75.28 74H66.57C66.8 65.42 66.07 57.58 64.84 50.62C63.99 50.24 63.14 49.87 62.28 49.53C53.02 45.72 43.16 43.12 33.13 42.51C29.32 42.26 25.47 42.16 21.66 42.39C16.67 50.93 12 61.45 8.93 74H0C2.62 62.49 6.51 52.53 10.85 44.05C8.28 44.67 5.74 45.43 3.23 46.35C5.55 41.89 9.8 39.24 14.44 37.53C18.65 30.39 23.06 24.54 27.02 19.96C38.05 7.17002 47.88 1.23002 48.29 0.990017C50.14 -0.119983 52.53 0.300017 53.9 1.98002C54.2 2.35002 61.41 11.3 67.41 27.08C69.48 32.52 71.54 39.22 73.04 46.97C75.62 49.11 77.87 51.65 79.2 54.77C79.78 56.13 80.2 57.57 80.26 59.07C79.38 58.57 78.6 58.07 77.81 57.61ZM62.63 40.59C61.62 36.86 60.51 33.48 59.4 30.51C55.91 21.22 51.92 14.44 49.47 10.73C45.9 13.38 39.83 18.38 33.37 25.92C31.19 28.46 28.86 31.43 26.51 34.81C36.21 33.82 46.08 35.25 55.42 37.91C57.88 38.64 60.29 39.53 62.63 40.58V40.59Z" fill="url(#paint4_radial_3572_320254)"/>
+<path d="M55.56 74H20.35C20.35 73.93 20.37 73.86 20.38 73.8C22.09 64.1 31.34 57.62 41.05 59.33C48.71 60.68 54.37 66.73 55.56 74ZM77.81 57.61C76.69 56.94 75.54 56.27 74.39 55.63C75.08 61.32 75.44 67.46 75.28 74H66.57C66.8 65.42 66.07 57.58 64.84 50.62C63.99 50.24 63.14 49.87 62.28 49.53C53.02 45.72 43.16 43.12 33.13 42.51C29.32 42.26 25.47 42.16 21.66 42.39C16.67 50.93 12 61.45 8.93 74H0C2.62 62.49 6.51 52.53 10.85 44.05C8.28 44.67 5.74 45.43 3.23 46.35C5.55 41.89 9.8 39.24 14.44 37.53C18.65 30.39 23.06 24.54 27.02 19.96C38.05 7.17002 47.88 1.23002 48.29 0.990017C50.14 -0.119983 52.53 0.300017 53.9 1.98002C54.2 2.35002 61.41 11.3 67.41 27.08C69.48 32.52 71.54 39.22 73.04 46.97C75.62 49.11 77.87 51.65 79.2 54.77C79.78 56.13 80.2 57.57 80.26 59.07C79.38 58.57 78.6 58.07 77.81 57.61ZM62.63 40.59C61.62 36.86 60.51 33.48 59.4 30.51C55.91 21.22 51.92 14.44 49.47 10.73C45.9 13.38 39.83 18.38 33.37 25.92C31.19 28.46 28.86 31.43 26.51 34.81C36.21 33.82 46.08 35.25 55.42 37.91C57.88 38.64 60.29 39.53 62.63 40.58V40.59Z" fill="url(#paint5_radial_3572_320254)" fill-opacity="0.75"/>
+<path d="M55.56 74H20.35C20.35 73.93 20.37 73.86 20.38 73.8C22.09 64.1 31.34 57.62 41.05 59.33C48.71 60.68 54.37 66.73 55.56 74ZM77.81 57.61C76.69 56.94 75.54 56.27 74.39 55.63C75.08 61.32 75.44 67.46 75.28 74H66.57C66.8 65.42 66.07 57.58 64.84 50.62C63.99 50.24 63.14 49.87 62.28 49.53C53.02 45.72 43.16 43.12 33.13 42.51C29.32 42.26 25.47 42.16 21.66 42.39C16.67 50.93 12 61.45 8.93 74H0C2.62 62.49 6.51 52.53 10.85 44.05C8.28 44.67 5.74 45.43 3.23 46.35C5.55 41.89 9.8 39.24 14.44 37.53C18.65 30.39 23.06 24.54 27.02 19.96C38.05 7.17002 47.88 1.23002 48.29 0.990017C50.14 -0.119983 52.53 0.300017 53.9 1.98002C54.2 2.35002 61.41 11.3 67.41 27.08C69.48 32.52 71.54 39.22 73.04 46.97C75.62 49.11 77.87 51.65 79.2 54.77C79.78 56.13 80.2 57.57 80.26 59.07C79.38 58.57 78.6 58.07 77.81 57.61ZM62.63 40.59C61.62 36.86 60.51 33.48 59.4 30.51C55.91 21.22 51.92 14.44 49.47 10.73C45.9 13.38 39.83 18.38 33.37 25.92C31.19 28.46 28.86 31.43 26.51 34.81C36.21 33.82 46.08 35.25 55.42 37.91C57.88 38.64 60.29 39.53 62.63 40.58V40.59Z" fill="url(#paint6_radial_3572_320254)"/>
+<path d="M55.56 74H20.35C20.35 73.93 20.37 73.86 20.38 73.8C22.09 64.1 31.34 57.62 41.05 59.33C48.71 60.68 54.37 66.73 55.56 74ZM77.81 57.61C76.69 56.94 75.54 56.27 74.39 55.63C75.08 61.32 75.44 67.46 75.28 74H66.57C66.8 65.42 66.07 57.58 64.84 50.62C63.99 50.24 63.14 49.87 62.28 49.53C53.02 45.72 43.16 43.12 33.13 42.51C29.32 42.26 25.47 42.16 21.66 42.39C16.67 50.93 12 61.45 8.93 74H0C2.62 62.49 6.51 52.53 10.85 44.05C8.28 44.67 5.74 45.43 3.23 46.35C5.55 41.89 9.8 39.24 14.44 37.53C18.65 30.39 23.06 24.54 27.02 19.96C38.05 7.17002 47.88 1.23002 48.29 0.990017C50.14 -0.119983 52.53 0.300017 53.9 1.98002C54.2 2.35002 61.41 11.3 67.41 27.08C69.48 32.52 71.54 39.22 73.04 46.97C75.62 49.11 77.87 51.65 79.2 54.77C79.78 56.13 80.2 57.57 80.26 59.07C79.38 58.57 78.6 58.07 77.81 57.61ZM62.63 40.59C61.62 36.86 60.51 33.48 59.4 30.51C55.91 21.22 51.92 14.44 49.47 10.73C45.9 13.38 39.83 18.38 33.37 25.92C31.19 28.46 28.86 31.43 26.51 34.81C36.21 33.82 46.08 35.25 55.42 37.91C57.88 38.64 60.29 39.53 62.63 40.58V40.59Z" fill="url(#paint7_radial_3572_320254)"/>
+<path d="M100.26 74V32.11H118.786C120.713 32.11 122.483 32.5033 124.096 33.29C125.748 34.0767 127.164 35.1387 128.344 36.476C129.563 37.8133 130.487 39.308 131.117 40.96C131.785 42.612 132.12 44.3033 132.12 46.034C132.12 47.804 131.805 49.515 131.176 51.167C130.586 52.7797 129.72 54.1957 128.58 55.415C127.439 56.6343 126.102 57.5783 124.568 58.247L134.126 74H125.158L116.544 59.958H108.402V74H100.26ZM108.402 52.819H118.609C119.631 52.819 120.536 52.524 121.323 51.934C122.109 51.3047 122.739 50.4787 123.211 49.456C123.683 48.4333 123.919 47.2927 123.919 46.034C123.919 44.6967 123.643 43.5363 123.093 42.553C122.542 41.5303 121.834 40.724 120.969 40.134C120.143 39.544 119.238 39.249 118.255 39.249H108.402V52.819Z" fill="#010119"/>
+<path d="M151.381 74.59C148.864 74.59 146.602 74.177 144.596 73.351C142.59 72.4857 140.879 71.3057 139.463 69.811C138.086 68.3163 137.024 66.6053 136.277 64.678C135.53 62.7507 135.156 60.725 135.156 58.601C135.156 56.4377 135.53 54.3923 136.277 52.465C137.024 50.5377 138.086 48.8267 139.463 47.332C140.879 45.8373 142.59 44.677 144.596 43.851C146.602 42.9857 148.864 42.553 151.381 42.553C153.898 42.553 156.14 42.9857 158.107 43.851C160.113 44.677 161.824 45.8373 163.24 47.332C164.656 48.8267 165.718 50.5377 166.426 52.465C167.173 54.3923 167.547 56.4377 167.547 58.601C167.547 60.725 167.173 62.7507 166.426 64.678C165.718 66.6053 164.656 68.3163 163.24 69.811C161.863 71.3057 160.172 72.4857 158.166 73.351C156.16 74.177 153.898 74.59 151.381 74.59ZM143.298 58.601C143.298 60.4103 143.652 62.023 144.36 63.439C145.068 64.8157 146.032 65.8973 147.251 66.684C148.47 67.4707 149.847 67.864 151.381 67.864C152.876 67.864 154.233 67.4707 155.452 66.684C156.671 65.858 157.635 64.7567 158.343 63.38C159.09 61.964 159.464 60.3513 159.464 58.542C159.464 56.772 159.09 55.179 158.343 53.763C157.635 52.347 156.671 51.2457 155.452 50.459C154.233 49.6723 152.876 49.279 151.381 49.279C149.847 49.279 148.47 49.692 147.251 50.518C146.032 51.3047 145.068 52.406 144.36 53.822C143.652 55.1987 143.298 56.7917 143.298 58.601Z" fill="#010119"/>
+<path d="M186.689 74.59C184.172 74.59 181.91 74.177 179.904 73.351C177.898 72.4857 176.187 71.3057 174.771 69.811C173.355 68.277 172.254 66.5463 171.467 64.619C170.72 62.6917 170.346 60.666 170.346 58.542C170.346 55.6313 170.995 52.9763 172.293 50.577C173.631 48.1383 175.519 46.1913 177.957 44.736C180.396 43.2807 183.287 42.553 186.63 42.553C189.974 42.553 192.845 43.2807 195.244 44.736C197.644 46.1913 199.433 48.099 200.613 50.459L192.884 52.819C192.216 51.6783 191.331 50.813 190.229 50.223C189.128 49.5937 187.909 49.279 186.571 49.279C185.077 49.279 183.7 49.6723 182.441 50.459C181.222 51.2063 180.258 52.288 179.55 53.704C178.842 55.0807 178.488 56.6933 178.488 58.542C178.488 60.3513 178.842 61.964 179.55 63.38C180.298 64.7567 181.281 65.858 182.5 66.684C183.72 67.4707 185.077 67.864 186.571 67.864C187.515 67.864 188.4 67.7067 189.226 67.392C190.092 67.0773 190.859 66.6447 191.527 66.094C192.196 65.5433 192.688 64.914 193.002 64.206L200.731 66.566C200.023 68.1 198.981 69.4767 197.604 70.696C196.267 71.9153 194.674 72.879 192.825 73.587C191.016 74.2557 188.971 74.59 186.689 74.59Z" fill="#010119"/>
+<path d="M226.128 74L217.101 60.666L212.912 64.796V74H205.006V30.93H212.912V57.008L225.361 43.143H233.739L222.234 56.241L234.565 74H226.128Z" fill="#010119"/>
+<path d="M261.019 74.295C257.676 74.295 254.824 73.7443 252.464 72.643C250.143 71.5023 248.255 69.9487 246.8 67.982C245.384 66.0153 244.342 63.793 243.673 61.315C243.004 58.7977 242.67 56.182 242.67 53.468V32.11H250.812V53.468C250.812 55.1987 250.969 56.89 251.284 58.542C251.638 60.1547 252.208 61.61 252.995 62.908C253.782 64.206 254.824 65.2287 256.122 65.976C257.42 66.7233 259.033 67.097 260.96 67.097C262.927 67.097 264.559 66.7233 265.857 65.976C267.194 65.1893 268.237 64.147 268.984 62.849C269.771 61.551 270.341 60.0957 270.695 58.483C271.049 56.831 271.226 55.1593 271.226 53.468V32.11H279.309V53.468C279.309 56.3393 278.955 59.0337 278.247 61.551C277.578 64.0683 276.497 66.2907 275.002 68.218C273.547 70.106 271.659 71.6007 269.338 72.702C267.017 73.764 264.244 74.295 261.019 74.295Z" fill="url(#paint8_linear_3572_320254)"/>
+<path d="M286.92 74V32.11H304.679C306.606 32.11 308.376 32.5033 309.989 33.29C311.602 34.0767 312.998 35.1387 314.178 36.476C315.397 37.8133 316.341 39.308 317.01 40.96C317.679 42.612 318.013 44.3033 318.013 46.034C318.013 48.394 317.462 50.636 316.361 52.76C315.26 54.884 313.745 56.6147 311.818 57.952C309.891 59.2893 307.609 59.958 304.974 59.958H295.062V74H286.92ZM295.062 52.819H304.502C305.485 52.819 306.37 52.5437 307.157 51.993C307.944 51.4423 308.573 50.6557 309.045 49.633C309.517 48.571 309.753 47.3713 309.753 46.034C309.753 44.5787 309.478 43.3397 308.927 42.317C308.416 41.2943 307.727 40.5273 306.862 40.016C306.036 39.5047 305.131 39.249 304.148 39.249H295.062V52.819Z" fill="url(#paint9_linear_3572_320254)"/>
+<defs>
+<clipPath id="paint0_angular_3572_320254_clip_path"><path d="M55.56 74H20.35C20.35 73.93 20.37 73.86 20.38 73.8C22.09 64.1 31.34 57.62 41.05 59.33C48.71 60.68 54.37 66.73 55.56 74ZM77.81 57.61C76.69 56.94 75.54 56.27 74.39 55.63C75.08 61.32 75.44 67.46 75.28 74H66.57C66.8 65.42 66.07 57.58 64.84 50.62C63.99 50.24 63.14 49.87 62.28 49.53C53.02 45.72 43.16 43.12 33.13 42.51C29.32 42.26 25.47 42.16 21.66 42.39C16.67 50.93 12 61.45 8.93 74H0C2.62 62.49 6.51 52.53 10.85 44.05C8.28 44.67 5.74 45.43 3.23 46.35C5.55 41.89 9.8 39.24 14.44 37.53C18.65 30.39 23.06 24.54 27.02 19.96C38.05 7.17002 47.88 1.23002 48.29 0.990017C50.14 -0.119983 52.53 0.300017 53.9 1.98002C54.2 2.35002 61.41 11.3 67.41 27.08C69.48 32.52 71.54 39.22 73.04 46.97C75.62 49.11 77.87 51.65 79.2 54.77C79.78 56.13 80.2 57.57 80.26 59.07C79.38 58.57 78.6 58.07 77.81 57.61ZM62.63 40.59C61.62 36.86 60.51 33.48 59.4 30.51C55.91 21.22 51.92 14.44 49.47 10.73C45.9 13.38 39.83 18.38 33.37 25.92C31.19 28.46 28.86 31.43 26.51 34.81C36.21 33.82 46.08 35.25 55.42 37.91C57.88 38.64 60.29 39.53 62.63 40.58V40.59Z"/></clipPath><radialGradient id="paint1_radial_3572_320254" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(44.5 39.8725) rotate(76.7014) scale(28.2577 19.2863)">
+<stop stop-color="#EF0667"/>
+<stop offset="1" stop-color="#F30051" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint2_radial_3572_320254" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(11 35.3725) rotate(43.2101) scale(45.2769 41.0998)">
+<stop stop-color="#EF0667"/>
+<stop offset="0.2034" stop-color="#F1035C" stop-opacity="0.4"/>
+<stop offset="1" stop-color="#F30051" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint3_radial_3572_320254" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(64.59 -12.7279) rotate(53.427) scale(56.6005 70.0415)">
+<stop stop-color="#FFE433"/>
+<stop offset="0.841451" stop-color="#FFBE4D" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint4_radial_3572_320254" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(63.5618 -17.5208) rotate(118.019) scale(49.8805 14.3004)">
+<stop offset="0.186164" stop-color="#FFEE33"/>
+<stop offset="1" stop-color="#FFB24D" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint5_radial_3572_320254" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(37.5891 -19.8689) rotate(38.0562) scale(92.5567 26.5354)">
+<stop offset="0.186164" stop-color="#FFEE33"/>
+<stop offset="1" stop-color="#FFB24D" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint6_radial_3572_320254" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(21 90.3725) rotate(-98.2759) scale(27.7894 30.2927)">
+<stop stop-color="#683FD2"/>
+<stop offset="1" stop-color="#683FD2" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint7_radial_3572_320254" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(25.5 -2.1275) rotate(88.5498) scale(39.5127 23.7281)">
+<stop stop-color="#FFAA33" stop-opacity="0.5"/>
+<stop offset="1" stop-color="#FF5533" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="paint8_linear_3572_320254" x1="242.67" y1="41.4251" x2="283.869" y2="91.5951" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FF7700"/>
+<stop offset="0.394951" stop-color="#E61BA2"/>
+<stop offset="0.56177" stop-color="#C431C4"/>
+<stop offset="0.722584" stop-color="#9235D4"/>
+<stop offset="1" stop-color="#7857DB"/>
+</linearGradient>
+<linearGradient id="paint9_linear_3572_320254" x1="242.67" y1="41.4251" x2="283.869" y2="91.5951" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FF7700"/>
+<stop offset="0.394951" stop-color="#E61BA2"/>
+<stop offset="0.56177" stop-color="#C431C4"/>
+<stop offset="0.722584" stop-color="#9235D4"/>
+<stop offset="1" stop-color="#7857DB"/>
+</linearGradient>
+</defs>
+</svg>
     </div>
-  </div>
-  <div class="chip" id="chip">Готов</div>
-</header>
+    <div class="chip" id="chip">Готов</div>
+  </header>
 
-<!-- ── Body ── -->
-<div class="body">
+  <main class="main">
+    <aside class="side">
+      <div class="section">
+        <div class="group">
+          <div class="label">Аудит</div>
+          <div class="field">
+            <label class="field-label" for="scriptUrl">Apps Script URL</label>
+            <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/…/exec" />
+          </div>
+          <div class="field">
+            <label class="field-label" for="spreadsheetId">Spreadsheet ID</label>
+            <input type="text" id="spreadsheetId" placeholder="Если пусто — создаст новую таблицу" />
+          </div>
+          <button class="btn btn-primary" id="auditBtn">Запустить аудит</button>
+          <button class="btn btn-secondary" id="exportBtn">Выгрузить JSON backup</button>
+        </div>
 
-  <div class="field">
-    <label class="field-label" for="scriptUrl">Apps Script URL</label>
-    <input type="text" id="scriptUrl"
-           placeholder="https://script.google.com/macros/s/…/exec" />
-  </div>
+        <div class="group">
+          <div class="label">Импорт / восстановление</div>
+          <label class="drop" id="drop">
+            <input type="file" id="fileInput" accept="application/json,.json" />
+            <div class="drop-title">Выбери JSON</div>
+            <div class="drop-text">Поддерживается `rockup_variables` и audit JSON с `allTokens`.</div>
+            <div class="file-name" id="fileName">Файл не выбран</div>
+          </label>
+        </div>
 
-  <div>
-    <button class="acc-btn" id="accBtn" onclick="toggleAcc()">
-      <span class="acc-arrow">
-        <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-          <path d="M2.5 1.5L5.5 4L2.5 6.5" stroke="currentColor" stroke-width="1.3"
-                stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </span>
-      Spreadsheet ID
-    </button>
-    <div class="acc-content" id="accContent">
-      <div class="field">
-        <label class="field-label" for="spreadsheetId">ID таблицы</label>
-        <input type="text" id="spreadsheetId"
-               placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms" />
-        <span class="hint">Если пусто — Apps Script создаст новую таблицу.</span>
+        <div class="group">
+          <div class="label">Опции проверки</div>
+          <div class="checkboxes">
+            <label class="checkline"><input type="checkbox" id="checkExtraTokens" checked /><span>Показывать лишние токены</span></label>
+            <label class="checkline"><input type="checkbox" id="checkExtraCollections" checked /><span>Показывать лишние RockUP коллекции</span></label>
+          </div>
+          <div class="label">Опции импорта</div>
+          <div class="checkboxes">
+            <label class="checkline"><input type="checkbox" id="createMissingModes" checked /><span>Создавать отсутствующие modes</span></label>
+            <label class="checkline"><input type="checkbox" id="createMissingVariables" checked /><span>Создавать отсутствующие токены</span></label>
+          </div>
+          <button class="btn btn-secondary" id="checkBtn" disabled>Проверить JSON</button>
+          <button class="btn btn-danger" id="importBtn" disabled>Импортировать JSON</button>
+          <button class="btn btn-secondary" id="downloadBtn" disabled>Скачать отчёт JSON</button>
+        </div>
+
+        <div class="group">
+          <div class="label">Перепривязка</div>
+          <div class="hint">Восстанавливает сломанные boundVariables после копирования компонентов между файлами. Выдели компонент перед запуском.</div>
+          <button class="btn btn-secondary" id="rebindBtn">Перепривязать переменные</button>
+        </div>
+
+        <div class="progress" id="progress">
+          <div class="bar"><div class="fill" id="barFill"></div></div>
+          <div class="status-row"><span id="statusText">Ожидание…</span><span id="statusPct">0%</span></div>
+        </div>
       </div>
-    </div>
-  </div>
+    </aside>
 
-</div>
+    <section class="content" id="content">
+      <div class="empty">
+        <div>
+          <strong>Выбери сценарий.</strong><br />
+          Можно запустить аудит, скачать backup JSON или загрузить JSON для проверки и восстановления.<br /><br />
+          Импорт работает безопасно: создаёт/обновляет, но ничего не удаляет.
+        </div>
+      </div>
+    </section>
+  </main>
 
-<hr class="divider" />
-
-<!-- ── Footer ── -->
-<footer class="footer">
-
-  <button class="btn-primary" id="runBtn" onclick="startAudit()">
-    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-      <path d="M3 1.5L9.5 5.5L3 9.5V1.5Z" fill="white"/>
-    </svg>
-    Запустить аудит
-  </button>
-
-  <div class="progress" id="progress">
-    <div class="progress-bar">
-      <div class="progress-fill" id="barFill"></div>
-    </div>
-    <div class="progress-row">
-      <span class="progress-label" id="statusTxt">Инициализация…</span>
-      <span class="progress-pct" id="statusPct">0%</span>
-    </div>
-  </div>
-
-  <div class="result" id="resultBox"></div>
-
-</footer>
+  <footer class="footer">
+    <span>Ref Colors сортируются: white, black, shadow, overlay, transparent → 10, 20, 30 … 190.</span>
+    <span>RockUP Design System</span>
+  </footer>
 
 <script>
+  var parsedJson = null;
+  var currentReport = null;
+  var reportKind = 'report';
   var running = false;
+  var pendingImportAfterCheck = false;
+  var currentRunMode = 'idle';
+  var progressLog = [];
 
-  /* ── Init ── */
+  var fileInput = document.getElementById('fileInput');
+  var fileName = document.getElementById('fileName');
+  var auditBtn = document.getElementById('auditBtn');
+  var exportBtn = document.getElementById('exportBtn');
+  var checkBtn = document.getElementById('checkBtn');
+  var importBtn = document.getElementById('importBtn');
+  var downloadBtn = document.getElementById('downloadBtn');
+
   document.addEventListener('DOMContentLoaded', function () {
     parent.postMessage({ pluginMessage: { type: 'ui-ready' } }, '*');
   });
 
-  /* ── Messages from code.js ── */
+  fileInput.addEventListener('change', function () {
+    var file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    fileName.textContent = file.name;
+    setChip('', 'Файл выбран');
+    setStatus('', 0, false);
+
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        parsedJson = JSON.parse(String(reader.result || ''));
+        checkBtn.disabled = false;
+        importBtn.disabled = false;
+        downloadBtn.disabled = true;
+        currentReport = null;
+        renderEmpty('Файл прочитан. Можно проверить или импортировать. Перед импортом плагин всё равно выполнит проверку.');
+      } catch (e) {
+        parsedJson = null;
+        checkBtn.disabled = true;
+        importBtn.disabled = true;
+        downloadBtn.disabled = true;
+        showError('Не удалось прочитать JSON: ' + e.message);
+      }
+    };
+    reader.onerror = function () {
+      parsedJson = null;
+      checkBtn.disabled = true;
+      importBtn.disabled = true;
+      downloadBtn.disabled = true;
+      showError('Не удалось прочитать файл.');
+    };
+    reader.readAsText(file);
+  });
+
+  auditBtn.addEventListener('click', startAudit);
+  exportBtn.addEventListener('click', startExportJson);
+  checkBtn.addEventListener('click', function () { startCheck(false); });
+  importBtn.addEventListener('click', function () { startCheck(true); });
+  document.getElementById('rebindBtn').addEventListener('click', startRebind);
+  downloadBtn.addEventListener('click', function () {
+    if (!currentReport) return;
+    downloadJson(currentReport, reportKind);
+  });
+
   window.onmessage = function (event) {
     var msg = event.data && event.data.pluginMessage;
     if (!msg) return;
 
     if (msg.type === 'stored-config') {
-      if (msg.scriptUrl)     document.getElementById('scriptUrl').value = msg.scriptUrl;
-      if (msg.spreadsheetId) {
-        document.getElementById('spreadsheetId').value = msg.spreadsheetId;
-        openAcc();
-      }
+      if (msg.scriptUrl) document.getElementById('scriptUrl').value = msg.scriptUrl;
+      if (msg.spreadsheetId) document.getElementById('spreadsheetId').value = msg.spreadsheetId;
     }
 
-    if (msg.type === 'status') setStatus(msg.text, msg.pct);
+    if (msg.type === 'status') setStatus(msg.text, msg.pct, true);
+    if (msg.type === 'progress' || msg.type === 'audit-status') setStatus(msg.text || msg.message, msg.pct || msg.progress, true);
 
     if (msg.type === 'audit-complete') {
-      setStatus('Данные обновлены', 100);
-      setChip('done', 'Готово');
-      showOk(msg.sheetUrl || null);
+      finishRun();
+      setStatus('Аудит завершён', 100, true);
+      setChip('ok', 'Готово');
+      renderAuditComplete(msg.sheetUrl || null, msg.sheetId || null);
       if (msg.sheetId) {
         document.getElementById('spreadsheetId').value = msg.sheetId;
-        openAcc();
-        parent.postMessage({ pluginMessage: { type: 'save-config', config: {
-          scriptUrl:     document.getElementById('scriptUrl').value.trim(),
-          spreadsheetId: msg.sheetId
-        }}}, '*');
+        saveConfig();
       }
-      resetBtn();
     }
 
     if (msg.type === 'data-ready') sendToSheets(msg.data, msg.scriptUrl, msg.spreadsheetId);
 
+    if (msg.type === 'json-ready') {
+      finishRun();
+      downloadJson(msg.data, 'rockup-audit');
+      setStatus('Audit JSON скачан', 100, true);
+      setChip('ok', 'Готово');
+      renderEmpty('Audit JSON скачан.');
+    }
+
+    if (msg.type === 'variables-json-ready') {
+      finishRun();
+      if (msg.json) {
+        downloadVariablesJsonString(msg.json, msg.filename);
+        setStatus('Backup JSON скачан', 100, true);
+        setChip('ok', 'Готово');
+        renderExportCompleteFromStats(msg.stats || {});
+      } else {
+        downloadVariablesJson(msg.data);
+        setStatus('Backup JSON скачан', 100, true);
+        setChip('ok', 'Готово');
+        renderExportComplete(msg.data);
+      }
+    }
+
+    if (msg.type === 'check-complete') {
+      running = false;
+      currentReport = msg.report;
+      reportKind = pendingImportAfterCheck ? 'pre_import_check_report' : 'check_report';
+      setButtonsEnabled(true);
+      downloadBtn.disabled = false;
+      setStatus('Проверка завершена', 100, true);
+      updateChipFromStatus(msg.report.status);
+      renderCheckReport(msg.report);
+      downloadJson(msg.report, reportKind);
+
+      if (pendingImportAfterCheck) {
+        var errors = (msg.report.issues || []).filter(function (i) { return i.severity === 'error'; }).length;
+        var warnings = (msg.report.issues || []).filter(function (i) { return i.severity === 'warning'; }).length;
+        var ok = confirm('Проверка завершена. Ошибок: ' + errors + ', предупреждений: ' + warnings + '. Запустить импорт?');
+        pendingImportAfterCheck = false;
+        if (ok) startImport();
+      }
+    }
+
+    if (msg.type === 'import-complete') {
+      finishRun();
+      currentReport = msg.report;
+      reportKind = 'import_report';
+      downloadBtn.disabled = false;
+      setStatus('Импорт завершён', 100, true);
+      updateChipFromStatus(msg.report.status);
+      renderImportReport(msg.report);
+      downloadJson(msg.report, reportKind);
+    }
+
+    if (msg.type === 'rebind-complete') {
+      finishRun();
+      setChip(msg.rebound > 0 ? 'ok' : '', msg.rebound > 0 ? 'Готово' : 'Готов');
+      setStatus(msg.summary, 100, true);
+      renderRebindReport(msg);
+    }
+
     if (msg.type === 'error') {
-      showErr(msg.text);
-      setChip('error', 'Ошибка');
-      resetBtn();
+      finishRun();
+      setChip('err', 'Ошибка');
+      showError(msg.text || 'Неизвестная ошибка');
     }
   };
 
-  /* ── UI helpers ── */
-  function setChip(cls, text) {
-    var el = document.getElementById('chip');
-    el.className = 'chip' + (cls ? ' ' + cls : '');
-    el.textContent = text;
+  function saveConfig() {
+    parent.postMessage({ pluginMessage: { type: 'save-config', config: {
+      scriptUrl: document.getElementById('scriptUrl').value.trim(),
+      spreadsheetId: document.getElementById('spreadsheetId').value.trim() || null
+    }}}, '*');
   }
 
-  function setStatus(text, pct) {
-    document.getElementById('progress').classList.add('on');
-    document.getElementById('statusTxt').textContent = text;
-    if (pct != null) {
-      document.getElementById('barFill').style.width = pct + '%';
-      document.getElementById('statusPct').textContent = pct + '%';
-    }
-  }
-
-  function showOk(url) {
-    var b = document.getElementById('resultBox');
-    b.className = 'result ok';
-    if (url) {
-      b.innerHTML =
-        '<span>✓ Таблица обновлена</span>' +
-        '<input class="url-copy" type="text" readonly value="' + url +
-        '" onclick="this.select()" />';
-      parent.postMessage({ pluginMessage: { type: 'open-url', url: url } }, '*');
-    } else {
-      b.innerHTML = '<span>✓ Данные отправлены. Найди таблицу в Google Drive.</span>';
-    }
-  }
-
-  function showErr(msg) {
-    var b = document.getElementById('resultBox');
-    b.className = 'result err';
-    b.textContent = '✗ ' + msg;
-  }
-
-  function resetBtn() {
-    running = false;
-    var btn = document.getElementById('runBtn');
-    btn.disabled = false;
-    btn.innerHTML =
-      '<svg width="11" height="11" viewBox="0 0 11 11" fill="none">' +
-      '<path d="M3 1.5L9.5 5.5L3 9.5V1.5Z" fill="white"/></svg>' +
-      ' Запустить аудит';
-    setChip('', 'Готов');
-  }
-
-  /* ── Accordion ── */
-  function toggleAcc() {
-    var content = document.getElementById('accContent');
-    if (content.classList.contains('open')) {
-      content.classList.remove('open');
-      document.getElementById('accBtn').classList.remove('open');
-    } else {
-      openAcc();
-    }
-  }
-
-  function openAcc() {
-    document.getElementById('accContent').classList.add('open');
-    document.getElementById('accBtn').classList.add('open');
-  }
-
-  /* ── Start audit ── */
   function startAudit() {
     if (running) return;
     var url = document.getElementById('scriptUrl').value.trim();
     var sid = document.getElementById('spreadsheetId').value.trim() || null;
-
     if (!url || url.indexOf('https://script.google.com') !== 0) {
-      showErr('Введи корректный URL Apps Script');
+      showError('Введи корректный Apps Script URL для записи аудита в Google Sheets.');
       return;
     }
-
     running = true;
-    document.getElementById('resultBox').className = 'result';
-    document.getElementById('progress').classList.remove('on');
-    document.getElementById('barFill').style.width = '0%';
-    document.getElementById('statusPct').textContent = '0%';
+    currentRunMode = 'audit';
+    progressLog = [];
+    setButtonsEnabled(false);
+    setChip('run', 'Аудит');
+    renderWorkProgress('audit', 'Аудит запущен', 'Плагин собирает summary, matrix, componentDetails, lightDark, WCAG, aliasDuplicates, refColors и allTokens.', 3, 'Запускаю аудит…');
+    setStatus('Запускаю аудит…', 3, true);
+    saveConfig();
+    parent.postMessage({ pluginMessage: { type: 'run-audit', scriptUrl: url, spreadsheetId: sid } }, '*');
+  }
 
-    var btn = document.getElementById('runBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<div class="spinner"></div> Работает…';
+  function startExportJson() {
+    if (running) return;
+    running = true;
+    currentRunMode = 'export';
+    progressLog = [];
+    setButtonsEnabled(false);
+    setChip('run', 'Экспорт');
+    renderWorkProgress('export', 'Выгрузка backup JSON', 'Файл будет скачан как YYYY-MM-DD_rockup_variables.json.', 3, 'Собираю backup JSON…');
+    setStatus('Собираю backup JSON…', 3, true);
+    parent.postMessage({ pluginMessage: { type: 'export-json' } }, '*');
+  }
 
-    setChip('running', 'Работает');
-    setStatus('Читаем переменные…', 3);
-
+  function startCheck(forImport) {
+    if (!parsedJson || running) return;
+    running = true;
+    currentRunMode = forImport ? 'preimport' : 'check';
+    progressLog = [];
+    pendingImportAfterCheck = !!forImport;
+    currentReport = null;
+    reportKind = forImport ? 'pre_import_check_report' : 'check_report';
+    setButtonsEnabled(false);
+    downloadBtn.disabled = true;
+    setChip('run', forImport ? 'Проверка перед импортом' : 'Проверка');
+    renderWorkProgress(currentRunMode, forImport ? 'Проверка перед импортом' : 'Проверка JSON', forImport ? 'Перед импортом выполняю проверку расхождений.' : 'Проверяю JSON относительно текущих Figma Variables.', 3, 'Отправляю JSON в main thread…');
+    setStatus('Отправляю JSON в main thread…', 3, true);
     parent.postMessage({ pluginMessage: {
-      type: 'save-config', config: { scriptUrl: url, spreadsheetId: sid }
-    }}, '*');
-    parent.postMessage({ pluginMessage: {
-      type: 'run-audit', scriptUrl: url, spreadsheetId: sid
+      type: 'check-json',
+      data: parsedJson,
+      options: {
+        checkExtraTokens: document.getElementById('checkExtraTokens').checked,
+        checkExtraCollections: document.getElementById('checkExtraCollections').checked
+      }
     }}, '*');
   }
 
-  /* ── Fallback: UI fetch ── */
+  function startImport() {
+    if (!parsedJson || running) return;
+    running = true;
+    currentRunMode = 'import';
+    progressLog = [];
+    currentReport = null;
+    reportKind = 'import_report';
+    setButtonsEnabled(false);
+    downloadBtn.disabled = true;
+    setChip('run', 'Импорт');
+    renderWorkProgress('import', 'Импорт JSON', 'Плагин создаёт/обновляет коллекции, токены, modes и alias. Лишнее не удаляется.', 3, 'Импортирую JSON…');
+    setStatus('Импортирую JSON…', 3, true);
+    parent.postMessage({ pluginMessage: {
+      type: 'import-json',
+      data: parsedJson,
+      options: {
+        createMissingModes: document.getElementById('createMissingModes').checked,
+        createMissingVariables: document.getElementById('createMissingVariables').checked
+      }
+    }}, '*');
+  }
+
   async function sendToSheets(data, scriptUrl, spreadsheetId) {
-    setStatus('Отправляю в Sheets…', 92);
+    setStatus('Отправляю в Sheets…', 92, true);
     try {
       var response = await fetch(scriptUrl, {
         method: 'POST',
@@ -658,30 +733,385 @@
       });
       if (!response.ok) throw new Error('HTTP ' + response.status);
       var result = await response.json();
-      setStatus('Готово', 100);
-      setChip('done', 'Готово');
-      showOk(result.url || null);
+      finishRun();
+      setStatus('Готово', 100, true);
+      setChip('ok', 'Готово');
+      renderAuditComplete(result.url || null, result.spreadsheetId || spreadsheetId || null);
     } catch (e) {
-      setStatus('CORS — скачиваю JSON…', 95);
-      downloadJson(data);
-      var b = document.getElementById('resultBox');
-      b.className = 'result warn';
-      b.innerHTML =
-        '⚠ Прямая отправка заблокирована (CORS).<br><br>' +
-        '<strong>JSON скачан.</strong> Загрузи в Google Drive или используй Figma Desktop.';
+      finishRun();
+      setStatus('CORS — скачиваю audit JSON…', 95, true);
+      downloadJson(data, 'rockup-audit');
+      setChip('warn', 'JSON');
+      renderNotice('warn', 'Прямая отправка заблокирована. Audit JSON скачан локально.');
     }
-    resetBtn();
   }
 
-  function downloadJson(data) {
+  function finishRun() {
+    running = false;
+    pendingImportAfterCheck = false;
+    currentRunMode = 'idle';
+    setButtonsEnabled(true);
+  }
+
+  function setButtonsEnabled(enabled) {
+    auditBtn.disabled = !enabled;
+    exportBtn.disabled = !enabled;
+    checkBtn.disabled = !enabled || !parsedJson;
+    importBtn.disabled = !enabled || !parsedJson;
+    downloadBtn.disabled = !enabled || !currentReport;
+    var rb = document.getElementById('rebindBtn'); if (rb) rb.disabled = !enabled;
+  }
+
+  function updateChipFromStatus(status) {
+    if (status === 'pass') setChip('ok', 'Pass');
+    else if (status === 'warning') setChip('warn', 'Warning');
+    else setChip('err', 'Fail');
+  }
+
+  function setChip(cls, text) {
+    var chip = document.getElementById('chip');
+    chip.className = 'chip' + (cls ? ' ' + cls : '');
+    chip.textContent = text;
+  }
+
+  function setStatus(text, pct, show) {
+    var safePct = Math.max(0, Math.min(100, Number(pct || 0)));
+    var progress = document.getElementById('progress');
+    if (show) progress.classList.add('on'); else progress.classList.remove('on');
+    document.getElementById('statusText').textContent = text || 'Ожидание…';
+    document.getElementById('barFill').style.width = safePct + '%';
+    document.getElementById('statusPct').textContent = safePct + '%';
+    if (show && text) updateWorkProgress(text, safePct);
+  }
+
+  function renderWorkProgress(mode, title, subtitle, pct, statusText) {
+    currentRunMode = mode || currentRunMode || 'audit';
+    var safePct = Math.max(0, Math.min(100, Number(pct || 0)));
+    progressLog = [];
+    var steps = getProgressSteps(currentRunMode);
+    var html = '';
+    html += '<div class="work-card">';
+    html += '<div class="work-top"><div><div class="work-title">' + escapeHtml(title) + '</div><div class="work-subtitle">' + escapeHtml(subtitle || '') + '</div></div><div class="status-card warning">IN PROGRESS</div></div>';
+    html += '<div class="work-progress"><div class="bar"><div class="fill" id="workFill" style="width:' + safePct + '%"></div></div><div class="work-percent" id="workPct">' + safePct + '%</div></div>';
+    html += '<div class="notice warn" id="workStatus">' + escapeHtml(statusText || 'Старт…') + '</div>';
+    html += '<div class="steps" id="workSteps">';
+    for (var i = 0; i < steps.length; i++) {
+      html += '<div class="step" data-step="' + i + '"><div class="step-dot"></div><div class="step-title">' + escapeHtml(steps[i].title) + '</div><div class="step-text">' + escapeHtml(steps[i].text) + '</div></div>';
+    }
+    html += '</div>';
+    html += '<div class="progress-log"><div class="progress-log-title">Журнал выполнения</div><div class="progress-log-body" id="progressLog"></div></div>';
+    html += '</div>';
+    document.getElementById('content').innerHTML = html;
+    updateWorkProgress(statusText || 'Старт…', safePct);
+  }
+
+  function updateWorkProgress(text, pct) {
+    var workFill = document.getElementById('workFill');
+    if (!workFill) return;
+    var safePct = Math.max(0, Math.min(100, Number(pct || 0)));
+    workFill.style.width = safePct + '%';
+    var workPct = document.getElementById('workPct');
+    if (workPct) workPct.textContent = safePct + '%';
+    var workStatus = document.getElementById('workStatus');
+    if (workStatus) workStatus.textContent = text || 'Ожидание…';
+
+    var steps = document.querySelectorAll('#workSteps .step');
+    var active = getActiveStepIndex(currentRunMode, safePct, text || '');
+    for (var i = 0; i < steps.length; i++) {
+      steps[i].classList.remove('is-active', 'is-done');
+      if (i < active) steps[i].classList.add('is-done');
+      else if (i === active) steps[i].classList.add('is-active');
+    }
+    appendProgressLog(text, safePct);
+  }
+
+  function appendProgressLog(text, pct) {
+    if (!text) return;
+    var last = progressLog.length ? progressLog[progressLog.length - 1].text : null;
+    if (last === text) return;
+    var stamp = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    progressLog.push({ time: stamp, pct: pct, text: text });
+    if (progressLog.length > 30) progressLog = progressLog.slice(progressLog.length - 30);
+    var el = document.getElementById('progressLog');
+    if (!el) return;
+    el.textContent = progressLog.map(function (item) {
+      return '[' + item.time + '] ' + item.pct + '% · ' + item.text;
+    }).join('\n');
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function getProgressSteps(mode) {
+    if (mode === 'export') return [
+      { title: 'Чтение', text: 'Получаем локальные коллекции и переменные' },
+      { title: 'Alias', text: 'Проверяем ссылки на другие переменные' },
+      { title: 'Сборка', text: 'Собираем backup-структуру' },
+      { title: 'JSON', text: 'Сериализуем файл' },
+      { title: 'Скачивание', text: 'Передаём файл в интерфейс' }
+    ];
+    if (mode === 'import') return [
+      { title: 'Чтение JSON', text: 'Нормализуем формат файла' },
+      { title: 'Коллекции', text: 'Создаём или находим коллекции' },
+      { title: 'Токены', text: 'Создаём или находим variables' },
+      { title: 'Значения', text: 'Обновляем values и modes' },
+      { title: 'Alias', text: 'Восстанавливаем ссылки' }
+    ];
+    if (mode === 'rebind') return [
+      { title: 'Переменные', text: 'Строим индекс локальных variables' },
+      { title: 'Обход нодов', text: 'Рекурсивно проходим по дереву' },
+      { title: 'Resolve', text: 'Запрашиваем имена сломанных ID' },
+      { title: 'Rebind', text: 'Перепривязываем fills, strokes, effects' },
+      { title: 'Готово', text: 'Формируем отчёт' }
+    ];
+    if (mode === 'check' || mode === 'preimport') return [
+      { title: 'Чтение JSON', text: 'Нормализуем формат файла' },
+      { title: 'Коллекции', text: 'Проверяем наличие коллекций' },
+      { title: 'Токены', text: 'Проверяем наличие variables' },
+      { title: 'Modes', text: 'Сравниваем режимы' },
+      { title: 'Значения', text: 'Сравниваем values и alias' }
+    ];
+    return [
+      { title: 'Variables', text: 'Читаем локальные переменные Figma' },
+      { title: 'Mapping', text: 'Маппим component tokens к system tokens' },
+      { title: 'Matrix', text: 'Строим матрицу и light/dark' },
+      { title: 'WCAG', text: 'Считаем контраст и Ref Colors' },
+      { title: 'Sheets', text: 'Отправляем данные в Google Sheets' }
+    ];
+  }
+
+  function getActiveStepIndex(mode, pct, text) {
+    var lower = String(text || '').toLowerCase();
+    if (pct >= 100) return 4;
+    if (lower.indexOf('sheets') !== -1 || lower.indexOf('отправ') !== -1 || lower.indexOf('google') !== -1) return 4;
+    if (lower.indexOf('wcag') !== -1 || lower.indexOf('ref colors') !== -1 || lower.indexOf('цвет') !== -1) return 3;
+    if (lower.indexOf('матри') !== -1 || lower.indexOf('matrix') !== -1 || lower.indexOf('json') !== -1 || lower.indexOf('сериал') !== -1) return 2;
+    if (lower.indexOf('alias') !== -1 || lower.indexOf('мап') !== -1 || lower.indexOf('token') !== -1 || lower.indexOf('токен') !== -1) return 1;
+    if (pct < 20) return 0;
+    if (pct < 45) return 1;
+    if (pct < 70) return 2;
+    if (pct < 90) return 3;
+    return 4;
+  }
+
+  function renderEmpty(text) {
+    document.getElementById('content').innerHTML = '<div class="empty"><div><strong>' + escapeHtml(text) + '</strong></div></div>';
+  }
+
+  function renderNotice(type, text) {
+    document.getElementById('content').innerHTML = '<div class="notice ' + type + '">' + escapeHtml(text) + '</div>';
+  }
+
+  function showError(text) { renderNotice('err', text); }
+
+  function renderAuditComplete(url, sheetId) {
+    var metrics = [[url ? 'Да' : 'Нет', 'Ссылка на таблицу'], ['8', 'Разделов аудита'], ['allTokens', 'Включён полный список токенов']];
+    var html = '<div class="result-head"><div><div class="result-title">Аудит завершён</div></div><div class="status-card pass">DONE</div></div>';
+    html += '<div class="notice ok">Таблица аудита обновлена. Ref Colors отсортированы с фиксированным началом и числовыми шагами.</div>';
+    html += '<div class="grid">';
+    for (var i = 0; i < metrics.length; i++) html += metric(metrics[i][0], metrics[i][1]);
+    html += '</div>';
+    if (url) {
+      html += '<div class="notice ok"><strong>URL:</strong><br><span class="mono">' + escapeHtml(url) + '</span></div>';
+      parent.postMessage({ pluginMessage: { type: 'open-url', url: url } }, '*');
+    }
+    document.getElementById('content').innerHTML = html;
+  }
+
+  function renderExportComplete(data) {
+    var collections = Object.keys(data || {}).length;
+    var tokens = 0;
+    Object.keys(data || {}).forEach(function (c) { tokens += Object.keys(data[c] || {}).length; });
+    var metrics = [[collections, 'Коллекций'], [tokens, 'Токенов'], ['backup', 'Формат'], ['YYYY-MM-DD_rockup_variables.json', 'Имя файла']];
+    var html = '<div class="result-head"><div><div class="result-title">Backup JSON скачан</div><div class="result-meta">Файл подходит для восстановления через импорт</div></div><div class="status-card pass">DONE</div></div>';
+    html += '<div class="notice ok">Файл выгружен в чистом backup-формате. В NEW Ref / Color порядок: white, black, shadow, overlay, transparent, затем числовые шаги.</div>';
+    html += '<div class="grid">';
+    for (var i = 0; i < metrics.length; i++) html += metric(metrics[i][0], metrics[i][1]);
+    html += '</div>';
+    document.getElementById('content').innerHTML = html;
+  }
+
+
+  function renderExportCompleteFromStats(stats) {
+    var html = '';
+    html += '<div class="result-head"><div><div class="result-title">Backup JSON скачан</div><div class="result-meta">Файл готов для восстановления коллекций через импорт</div></div><div class="status-card ok">OK</div></div>';
+    html += '<div class="grid">' + metric(stats.collections || 0, 'Коллекций') + metric(stats.variables || 0, 'Токенов') + metric(stats.externalAliasIds || 0, 'Внешних alias') + metric(stats.loadedExternalAliases || 0, 'Подгружено alias') + '</div>';
+    html += '<div class="notice ok">Файл скачан как YYYY-MM-DD_rockup_variables.json.</div>';
+    if (stats.note) html += '<div class="notice warn" style="margin-top:12px">' + escapeHtml(stats.note) + '</div>';
+    document.getElementById('content').innerHTML = html;
+  }
+
+  function renderCheckReport(report) {
+    var s = report.stats || {};
+    var issues = report.issues || [];
+    var errors = issues.filter(function (i) { return i.severity === 'error'; }).length;
+    var warnings = issues.filter(function (i) { return i.severity === 'warning'; }).length;
+    var noticeText = report.status === 'pass'
+      ? 'Все ожидаемые коллекции, токены, modes и значения совпадают с JSON.'
+      : (report.status === 'warning'
+        ? 'Критичных ошибок нет, но найдены предупреждения: например, лишние коллекции или токены.'
+        : 'Найдены расхождения. Их можно исправить через импорт или вручную.');
+    var metrics = [
+      [s.expectedCollections, 'Коллекций в JSON'], [s.foundCollections, 'Коллекций найдено'],
+      [s.expectedTokens, 'Токенов в JSON'], [s.foundTokens, 'Токенов найдено'],
+      [s.missingCollections, 'Нет коллекций'], [s.missingTokens, 'Нет токенов'],
+      [s.typeMismatches, 'Ошибок типа'], [s.valueMismatches, 'Ошибок значения'],
+      [s.missingModes, 'Нет modes'], [s.extraCollections, 'Лишних коллекций'],
+      [s.extraTokens, 'Лишних токенов'], [errors + ' / ' + warnings, 'Errors / Warnings']
+    ];
+    renderReportShell('Результат проверки', 'Формат: ' + (s.format || '—') + ' · ' + (report.generatedAt || ''), report.status, noticeText, metrics, issues);
+  }
+
+  function renderImportReport(report) {
+    var s = report.stats || {};
+    var issues = report.issues || [];
+    var noticeText = report.status === 'pass'
+      ? 'Импорт завершён без ошибок. Коллекции, токены, значения и alias восстановлены.'
+      : (report.status === 'warning'
+        ? 'Импорт завершён, но есть предупреждения. Проверь отчёт ниже.'
+        : 'Импорт завершился с ошибками. Часть токенов могла быть создана/обновлена, но часть значений не установлена.');
+    var metrics = [
+      [s.collectionsCreated, 'Коллекций создано'], [s.collectionsReused, 'Коллекций найдено'],
+      [s.modesCreated, 'Modes создано'], [s.modesReused, 'Modes найдено'],
+      [s.variablesCreated, 'Токенов создано'], [s.variablesReused, 'Токенов найдено'],
+      [s.valuesUpdated, 'Значений обновлено'], [s.valuesSkipped, 'Значений без изменений/skip'],
+      [s.errors, 'Ошибок'], [s.warnings, 'Предупреждений']
+    ];
+    renderReportShell('Результат импорта', 'Формат: ' + (report.format || '—') + ' · ' + (report.generatedAt || ''), report.status, noticeText, metrics, issues);
+  }
+
+  function renderReportShell(title, meta, status, noticeText, metrics, issues) {
+    var statusLabel = status === 'pass' ? 'PASS' : (status === 'warning' ? 'WARNING' : 'FAIL');
+    var noticeClass = status === 'pass' ? 'ok' : (status === 'warning' ? 'warn' : 'err');
+    var html = '';
+    html += '<div class="result-head"><div><div class="result-title">' + escapeHtml(title) + '</div><div class="result-meta">' + escapeHtml(meta || '') + '</div></div><div class="status-card ' + escapeHtml(status) + '">' + statusLabel + '</div></div>';
+    html += '<div class="notice ' + noticeClass + '">' + escapeHtml(noticeText) + '</div>';
+    html += '<div class="grid">';
+    for (var m = 0; m < metrics.length; m++) html += metric(metrics[m][0], metrics[m][1]);
+    html += '</div>';
+    if (!issues || issues.length === 0) {
+      html += '<div class="notice ok">Ошибок и предупреждений нет.</div>';
+    } else {
+      html += '<table><thead><tr><th style="width:70px">Level</th><th style="width:120px">Тип</th><th style="width:150px">Коллекция</th><th>Токен</th><th style="width:70px">Mode</th><th>Expected</th><th>Actual</th></tr></thead><tbody>';
+      var visible = issues.slice(0, 140);
+      for (var i = 0; i < visible.length; i++) {
+        var it = visible[i];
+        html += '<tr>';
+        html += '<td><span class="sev ' + escapeHtml(it.severity) + '">' + escapeHtml(it.severity) + '</span></td>';
+        html += '<td>' + escapeHtml(it.category) + '</td>';
+        html += '<td class="mono">' + escapeHtml(it.collection) + '</td>';
+        html += '<td class="mono">' + escapeHtml(it.token) + '</td>';
+        html += '<td>' + escapeHtml(it.mode) + '</td>';
+        html += '<td class="mono">' + escapeHtml(String(it.expected)) + '</td>';
+        html += '<td class="mono">' + escapeHtml(String(it.actual)) + '</td>';
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+      if (issues.length > visible.length) html += '<div class="notice warn" style="margin-top:12px">Показаны первые ' + visible.length + ' записей из ' + issues.length + '. Полный список есть в скачанном отчёте JSON.</div>';
+    }
+    document.getElementById('content').innerHTML = html;
+  }
+
+  function metric(value, label) {
+    return '<div class="metric"><div class="metric-value">' + escapeHtml(value == null ? '0' : String(value)) + '</div><div class="metric-label">' + escapeHtml(label) + '</div></div>';
+  }
+
+  function downloadVariablesJson(data) {
     var date = new Date().toISOString().slice(0, 10);
     var json = JSON.stringify(data, null, 2);
     var blob = new Blob([json], { type: 'application/json' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
-    a.href = url; a.download = 'rockup-audit-' + date + '.json';
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
+    a.href = url;
+    a.download = date + '_rockup_variables.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+
+  function downloadVariablesJsonString(json, filename) {
+    var date = new Date().toISOString().slice(0, 10);
+    var blob = new Blob([json], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename || (date + '_rockup_variables.json');
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  function downloadJson(data, kind) {
+    var date = new Date().toISOString().slice(0, 10);
+    var json = JSON.stringify(data, null, 2);
+    var blob = new Blob([json], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = date + '_rockup_token_' + (kind || 'report') + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  function startRebind() {
+    if (running) return;
+    running = true;
+    currentRunMode = 'rebind';
+    progressLog = [];
+    setButtonsEnabled(false);
+    setChip('run', 'Rebind');
+    renderWorkProgress('rebind', 'Перепривязка переменных', 'Плагин обходит выделенные ноды и восстанавливает boundVariables по имени токена.', 3, 'Читаю локальные переменные…');
+    setStatus('Читаю локальные переменные…', 3, true);
+    parent.postMessage({ pluginMessage: { type: 'rebind-variables' } }, '*');
+  }
+
+  function renderRebindReport(msg) {
+    var metrics = [
+      [msg.rebound,             'Перепривязано'],
+      [msg.alreadyOk,           'Уже ок'],
+      [msg.notFound,            'Не найдено'],
+      [msg.ambiguous || 0,      'Неоднозначно'],
+      [msg.componentCount || 0, 'Компонент-мастеров'],
+      [msg.instanceCount  || 0, 'Инстансов (пропущено)'],
+      [(msg.errors || []).length,'Ошибок присвоения']
+    ];
+    var noChange = msg.rebound === 0;
+    var status = (msg.errors && msg.errors.length > 0) || (noChange && msg.notFound > 0) ? 'warning'
+               : noChange && (msg.ambiguous || 0) > 0 ? 'warning' : 'pass';
+
+    var noticeText;
+    if (msg.rebound > 0) {
+      noticeText = '✓ Привязки восстановлены по совпадению цвета. Проверь компоненты в Figma.';
+    } else if (msg.alreadyOk > 0 && !msg.notFound && !msg.ambiguous) {
+      noticeText = 'Все привязки уже указывают на локальные переменные — ничего не менялось.';
+    } else if ((msg.ambiguous || 0) > 0 && msg.rebound === 0) {
+      noticeText = '⚠ Цвета найдены, но совпадений несколько — не могу выбрать однозначно. Смотри диагностику: нужно уточнить имена нодов или добавить уникальные цвета токенам.';
+    } else if (msg.notFound > 0 && msg.rebound === 0) {
+      noticeText = '⚠ Цвета нодов не совпали ни с одной локальной переменной. Убедись что JSON импортирован и токены содержат правильные hex-значения.';
+    } else if ((msg.componentCount || 0) === 0) {
+      noticeText = '⚠ В выделении нет мастер-компонентов (◆). Выдели именно COMPONENT, не его инстанс (⬦).';
+    } else {
+      noticeText = 'Ничего не изменилось. Смотри диагностику ниже.';
+    }
+
+    var issues = (msg.errors || []).map(function(e) {
+      return { severity: 'error', category: 'assign', collection: '', token: e, mode: '', expected: '', actual: '' };
+    });
+
+    renderReportShell('Результат перепривязки', new Date().toLocaleString('ru-RU'), status, noticeText, metrics, issues);
+
+    // Diagnostic samples
+    if (msg.diagSamples && msg.diagSamples.length > 0) {
+      var existing = document.getElementById('content').innerHTML;
+      var diagHtml = '<div style="margin-top:14px"><div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--fg-3);margin-bottom:6px">Диагностика (первые 6 нодов)</div>';
+      diagHtml += '<div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px;font-family:SF Mono,Menlo,monospace;font-size:10px;color:var(--fg-2);white-space:pre-wrap;line-height:1.6">';
+      diagHtml += escapeHtml(msg.diagSamples.join('\n'));
+      diagHtml += '</div></div>';
+      document.getElementById('content').innerHTML = existing + diagHtml;
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 </script>
 </body>
