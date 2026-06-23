@@ -8,7 +8,7 @@
 Назови его, например: `RockUP Token Audit`.
 
 > **Совет:** Лучше создать скрипт, привязанный к таблице:  
-> Открой [таблицу](https://docs.google.com/spreadsheets/d/1Cv1kW-06_uk2FIR6okKtea9CwL_CMpWiwufnuHDPs7U/edit) →  
+> Открой [таблицу](https://docs.google.com/spreadsheets/d/1GvxfhQqdfbtR6czzPKbnekzLgSpGhSnYnA9EakRWN_Q/edit) →  
 > **Расширения → Apps Script** → откроется редактор, уже привязанный к этому Spreadsheet ID.
 
 ---
@@ -44,7 +44,7 @@
 ```javascript
 var TEAM_DEFAULTS = {
   scriptUrl:     'https://script.google.com/macros/s/ВАШ_НОВЫЙ_URL/exec',
-  spreadsheetId: '1Cv1kW-06_uk2FIR6okKtea9CwL_CMpWiwufnuHDPs7U'
+  spreadsheetId: '1GvxfhQqdfbtR6czzPKbnekzLgSpGhSnYnA9EakRWN_Q'
 };
 ```
 
