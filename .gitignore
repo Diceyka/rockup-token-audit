@@ -11,6 +11,7 @@ processed/
 templates/
 graphify-out/
 *.html
+!index.html
 ds-changelog.json
 
 # Internal Cowork / Claude files
