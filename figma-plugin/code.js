@@ -8,7 +8,7 @@
 // scriptUrl:     задеплоенный URL Google Apps Script Web App
 // spreadsheetId: ID Google Sheets таблицы (часть URL между /d/ и /edit)
 var TEAM_DEFAULTS = {
-  scriptUrl:     'https://script.google.com/macros/s/AKfycbzhZmpXmxKTKsL97jDkSDRAq1nV31WcbttcSx1bM1CUGfSHSP3GSi2cIzmxKzFT4piI/exec',
+  scriptUrl:     'https://script.google.com/macros/s/AKfycbzO_GfToRsN3XdNg57kaeIImBOJ-VgimXIvSVFM0L4TnLCGIbYWTdT1cBOLXoVHPtIi/exec',
   spreadsheetId: '1GvxfhQqdfbtR6czzPKbnekzLgSpGhSnYnA9EakRWN_Q'
 };
 // ────────────────────────────────────────────────────────────

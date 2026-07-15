@@ -714,7 +714,9 @@ function writeRefColors(ss, refColors) {
   for (var start = 0; start < allRows.length; start += CHUNK) {
     var chunk = allRows.slice(start, Math.min(start + CHUNK, allRows.length));
     var visibleChunk = chunk.map(function(row) { return row.slice(0, 5); });
-    ws.getRange(2 + start, 1, visibleChunk.length, 5).setValues(visibleChunk);
+    ws.getRange(2 + start, 1, visibleChunk.length, 5)
+      .setValues(visibleChunk)
+      .setFontColor('#212121');
   }
 
   ws.setRowHeights(2, allRows.length, 20);
@@ -780,7 +782,9 @@ function updateActionItems(ss, data) {
 
     if (keyMap.hasOwnProperty(key)) {
       var sheetRow = keyMap[key] + 2;
-      ws.getRange(sheetRow, 1, 1, AI_AUTO_COLS).setValues([autoRow]);
+      ws.getRange(sheetRow, 1, 1, AI_AUTO_COLS)
+        .setValues([autoRow])
+        .setFontColor('#212121');
     } else {
       toAdd.push(autoRow.concat(['', '', 'Новая', '']));
     }
@@ -788,7 +792,9 @@ function updateActionItems(ss, data) {
 
   if (toAdd.length) {
     var insertAt = ws.getLastRow() + 1;
-    ws.getRange(insertAt, 1, toAdd.length, AI_TOTAL_COLS).setValues(toAdd);
+    ws.getRange(insertAt, 1, toAdd.length, AI_TOTAL_COLS)
+      .setValues(toAdd)
+      .setFontColor('#212121');
     ws.getRange(insertAt, 1, toAdd.length, AI_TOTAL_COLS).setBackground('#fffde7');
   }
 
@@ -979,7 +985,9 @@ function writeChangeLog(ss, runChanges) {
     return [r.date, r.source, r.object, r.type, r.oldValue, r.newValue];
   });
   ws.getRange(lastRow + 1, 1, logRows.length, 6).setValues(logRows);
-  ws.getRange(lastRow + 1, 1, logRows.length, 6).setBackground('#fff9c4');
+  ws.getRange(lastRow + 1, 1, logRows.length, 6)
+    .setBackground('#fff9c4')
+    .setFontColor('#212121');
 }
 
 function writeDashboard(ss, summary) {
